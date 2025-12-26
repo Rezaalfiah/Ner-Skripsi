@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NER - LSTM & Naive Bayes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <header>
+    <div class="navbar">
+      <span><b>Home</b></span>
+      <span><b>NER Bahasa Indonesia Menggunakan Abstrak Jurnal Ilmiah Untuk Mengidentifikasi Khasiat Tanaman Obat Keluarga</b></span>
+      <span class="model-title">Named Entity Recognition<br>Model LSTM dan Naive Bayes</span>
+    </div>
+  </header>
+
+  <main>
+    <form method="POST">
+      <div class="form-group">
+        <label>Judul Jurnal</label>
+        <input type="text" name="judul" placeholder="Masukkan judul jurnal" required>
+      </div>
+
+      <div class="form-group">
+        <label>Nama Penulis</label>
+        <input type="text" name="penulis" placeholder="Masukkan nama penulis" required>
+      </div>
+
+      <div class="form-group">
+        <label>Tahun Terbit</label>
+        <input type="text" name="tahun" placeholder="Contoh: 2025" required>
+      </div>
+
+      <div class="form-group">
+        <label>Masukkan Abstrak</label>
+        <textarea name="abstrak" placeholder="Masukkan kalimat abstrak di sini..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Model:</label><br>
+        <input type="radio" id="lstm" name="model" value="lstm" checked>
+        <label for="lstm">LSTM</label>
+
+        <input type="radio" id="nb" name="model" value="naive_bayes">
+        <label for="nb">Naive Bayes</label>
+      </div>
+
+      <div class="form-group">
+        <button type="submit">Proses</button>
+      </div>
+    </form>
+
+    {% if output_text %}
+    <section class="output-section">
+      <h3>Output:</h3>
+      <div class="output-box">{{ output_text | safe }}</div>
+
+      <h3>Tabel Klasifikasi</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tumbuhan (HERB)</th>
+            <th>Anggota Tubuh (BODY_PART)</th>
+            <th>Penyakit (DISEASE)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ herbs }}</td>
+            <td>{{ body_parts }}</td>
+            <td>{{ diseases }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Informasi Jurnal</h3>
+      <table>
+        <tr>
+          <th>Judul Jurnal</th>
+          <td>{{ judul }}</td>
+        </tr>
+        <tr>
+          <th>Nama Penulis</th>
+          <td>{{ penulis }}</td>
+        </tr>
+        <tr>
+          <th>Tahun Terbit</th>
+          <td>{{ tahun }}</td>
+        </tr>
+      </table>
+    </section>
+    {% endif %}
+  </main>
+
+  <footer>
+    <p>&copy; Skripsi Reza - 2025</p>
+  </footer>
+
+</body>
+</html>
