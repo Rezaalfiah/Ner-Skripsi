@@ -1,101 +1,714 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>NER - LSTM & Naive Bayes</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>NER Tanaman Herbal</title>
+
+```
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f8f4;
+        color: #1f2d1f;
+    }
+
+    /* ===== Header & Navbar ===== */
+
+    .header {
+        background: linear-gradient(135deg, #1b5e20, #2e7d32, #66bb6a);
+        color: white;
+        padding: 28px 40px;
+        text-align: center;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 32px;
+        letter-spacing: 0.5px;
+    }
+
+    .header p {
+        margin-top: 10px;
+        font-size: 16px;
+        opacity: 0.95;
+    }
+
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: #ffffff;
+        border-bottom: 1px solid #d7e5d7;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .navbar-content {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 20px;
+    }
+
+    .navbar a {
+        text-decoration: none;
+        color: #1b5e20;
+        font-weight: bold;
+        padding: 9px 16px;
+        border-radius: 20px;
+        transition: 0.2s;
+    }
+
+    .navbar a:hover {
+        background-color: #e8f5e9;
+        color: #0d3d12;
+    }
+
+    /* ===== Layout ===== */
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+
+    .section {
+        margin-bottom: 45px;
+        scroll-margin-top: 90px;
+    }
+
+    .section-title {
+        font-size: 26px;
+        margin-bottom: 12px;
+        color: #1b5e20;
+    }
+
+    .section-subtitle {
+        color: #4f5f4f;
+        line-height: 1.7;
+        max-width: 900px;
+    }
+
+    /* ===== Hero ===== */
+
+    .hero {
+        background-color: #ffffff;
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+        display: grid;
+        grid-template-columns: 1.4fr 0.8fr;
+        gap: 24px;
+        align-items: center;
+    }
+
+    .hero h2 {
+        margin-top: 0;
+        color: #1b5e20;
+        font-size: 30px;
+    }
+
+    .hero p {
+        line-height: 1.7;
+        color: #425242;
+    }
+
+    .hero-box {
+        background-color: #e8f5e9;
+        border-left: 5px solid #2e7d32;
+        padding: 18px;
+        border-radius: 12px;
+    }
+
+    .hero-box strong {
+        color: #1b5e20;
+    }
+
+    /* ===== Herbal Cards ===== */
+
+    .herbal-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-top: 22px;
+    }
+
+    .herbal-card {
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        border-top: 5px solid #43a047;
+    }
+
+    .herbal-card h3 {
+        margin-top: 0;
+        margin-bottom: 8px;
+        color: #1b5e20;
+    }
+
+    .herbal-card p {
+        line-height: 1.6;
+        color: #4d5c4d;
+        font-size: 14px;
+    }
+
+    .tag {
+        display: inline-block;
+        background-color: #e8f5e9;
+        color: #1b5e20;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 8px;
+    }
+
+    /* ===== NER Form ===== */
+
+    .ner-card {
+        background-color: #ffffff;
+        border-radius: 18px;
+        padding: 26px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 0.5fr;
+        gap: 14px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #233823;
+    }
+
+    input[type="text"],
+    textarea {
+        width: 100%;
+        margin-top: 6px;
+        margin-bottom: 14px;
+        padding: 11px 12px;
+        border: 1px solid #cbd8cb;
+        border-radius: 10px;
+        font-size: 14px;
+        outline: none;
+        background-color: #fbfdfb;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+        border-color: #43a047;
+        box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.15);
+    }
+
+    textarea {
+        min-height: 180px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .radio-group {
+        background-color: #f4f8f4;
+        border: 1px solid #d7e5d7;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 16px;
+    }
+
+    .radio-group label {
+        margin-right: 16px;
+        font-weight: normal;
+    }
+
+    .button-submit {
+        background-color: #1b5e20;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .button-submit:hover {
+        background-color: #0f3f13;
+        transform: translateY(-1px);
+    }
+
+    /* ===== Output ===== */
+
+    .result-section {
+        margin-top: 28px;
+    }
+
+    .model-info {
+        background-color: #eef8ef;
+        border-left: 5px solid #2e7d32;
+        padding: 14px 16px;
+        margin: 12px 0 18px 0;
+        border-radius: 10px;
+        line-height: 1.6;
+    }
+
+    .model-badge {
+        display: inline-block;
+        background-color: #d9f0dc;
+        border: 1px solid #a8d8ad;
+        color: #1b5e20;
+        padding: 5px 9px;
+        margin-top: 8px;
+        margin-right: 6px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .legend {
+        margin: 12px 0 18px 0;
+        line-height: 2.2;
+    }
+
+    .legend span {
+        margin-right: 7px;
+    }
+
+    .output-box {
+        background-color: #fbfdfb;
+        border: 1px solid #cbd8cb;
+        border-radius: 14px;
+        padding: 18px;
+        line-height: 1.55;
+        text-align: justify;
+        margin-bottom: 22px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        margin-top: 10px;
+        margin-bottom: 22px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    th, td {
+        border: 1px solid #d7e5d7;
+        padding: 12px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 14px;
+    }
+
+    th {
+        background-color: #e8f5e9;
+        color: #1b5e20;
+    }
+
+    .empty-value {
+        color: #777777;
+        font-style: italic;
+    }
+
+    /* ===== Entity Colors ===== */
+
+    .highlight-HERB {
+        background-color: #81c784;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .highlight-BODY_PART {
+        background-color: #90caf9;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .highlight-DISEASE {
+        background-color: #ef9a9a;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .highlight-COMPOUND {
+        background-color: #ffe082;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .highlight-EFFECT {
+        background-color: #ce93d8;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .highlight-TREATMENT {
+        background-color: #aed581;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .highlight-METHOD {
+        background-color: #b3e5fc;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .highlight-POPULATION {
+        background-color: #ffcc80;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    /* ===== Footer ===== */
+
+    .footer {
+        background-color: #1b5e20;
+        color: white;
+        text-align: center;
+        padding: 18px;
+        margin-top: 40px;
+        font-size: 14px;
+    }
+
+    /* ===== Responsive ===== */
+
+    @media (max-width: 850px) {
+        .hero {
+            grid-template-columns: 1fr;
+        }
+
+        .herbal-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .navbar-content {
+            flex-wrap: wrap;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .herbal-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .hero h2 {
+            font-size: 24px;
+        }
+    }
+</style>
+```
+
 </head>
+
 <body>
 
-  <header>
-    <div class="navbar">
-      <span><b>Home</b></span>
-      <span><b>NER Bahasa Indonesia Menggunakan Abstrak Jurnal Ilmiah Untuk Mengidentifikasi Khasiat Tanaman Obat Keluarga</b></span>
-      <span class="model-title">Named Entity Recognition<br>Model LSTM dan Naive Bayes</span>
+```
+<header class="header" id="beranda">
+    <h1>Named Entity Recognition pada Tanaman Herbal</h1>
+    <p>Sistem identifikasi entitas pada teks jurnal herbal menggunakan BiLSTM dan Naive Bayes</p>
+</header>
+
+<nav class="navbar">
+    <div class="navbar-content">
+        <a href="#beranda">Beranda</a>
+        <a href="#tanaman-herbal">Tanaman Herbal</a>
+        <a href="#ner">Named Entity Recognition</a>
     </div>
-  </header>
+</nav>
 
-  <main>
-    <form method="POST">
-      <div class="form-group">
-        <label>Judul Jurnal</label>
-        <input type="text" name="judul" placeholder="Masukkan judul jurnal" required>
-      </div>
+<main class="container">
 
-      <div class="form-group">
-        <label>Nama Penulis</label>
-        <input type="text" name="penulis" placeholder="Masukkan nama penulis" required>
-      </div>
+    <section class="section hero">
+        <div>
+            <h2>Analisis Entitas pada Teks Herbal</h2>
+            <p>
+                Website ini digunakan untuk mengenali entitas penting dalam abstrak jurnal
+                yang berkaitan dengan tanaman herbal. Entitas yang dikenali meliputi nama
+                tumbuhan, penyakit, anggota tubuh, senyawa, efek, terapi, metode, dan populasi.
+            </p>
+            <p>
+                Sistem ini menerapkan pendekatan Named Entity Recognition berbasis BIO tagging
+                dengan dua model, yaitu BiLSTM sebagai model utama dan Naive Bayes sebagai model pembanding.
+            </p>
+        </div>
 
-      <div class="form-group">
-        <label>Tahun Terbit</label>
-        <input type="text" name="tahun" placeholder="Contoh: 2025" required>
-      </div>
-
-      <div class="form-group">
-        <label>Masukkan Abstrak</label>
-        <textarea name="abstrak" placeholder="Masukkan kalimat abstrak di sini..." required></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Pilih Model:</label><br>
-        <input type="radio" id="lstm" name="model" value="lstm" checked>
-        <label for="lstm">LSTM</label>
-
-        <input type="radio" id="nb" name="model" value="naive_bayes">
-        <label for="nb">Naive Bayes</label>
-      </div>
-
-      <div class="form-group">
-        <button type="submit">Proses</button>
-      </div>
-    </form>
-
-    {% if output_text %}
-    <section class="output-section">
-      <h3>Output:</h3>
-      <div class="output-box">{{ output_text | safe }}</div>
-
-      <h3>Tabel Klasifikasi</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Tumbuhan (HERB)</th>
-            <th>Anggota Tubuh (BODY_PART)</th>
-            <th>Penyakit (DISEASE)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ herbs }}</td>
-            <td>{{ body_parts }}</td>
-            <td>{{ diseases }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Informasi Jurnal</h3>
-      <table>
-        <tr>
-          <th>Judul Jurnal</th>
-          <td>{{ judul }}</td>
-        </tr>
-        <tr>
-          <th>Nama Penulis</th>
-          <td>{{ penulis }}</td>
-        </tr>
-        <tr>
-          <th>Tahun Terbit</th>
-          <td>{{ tahun }}</td>
-        </tr>
-      </table>
+        <div class="hero-box">
+            <strong>Tujuan Sistem</strong>
+            <p>
+                Membantu proses ekstraksi informasi dari teks ilmiah herbal agar entitas penting
+                dapat terlihat lebih jelas dan terstruktur.
+            </p>
+        </div>
     </section>
-    {% endif %}
-  </main>
 
-  <footer>
-    <p>&copy; Skripsi Reza - 2025</p>
-  </footer>
+    <section class="section" id="tanaman-herbal">
+        <h2 class="section-title">Penjelasan Tanaman Herbal</h2>
+        <p class="section-subtitle">
+            Tanaman herbal merupakan tumbuhan yang secara tradisional banyak digunakan
+            dalam pengobatan, perawatan tubuh, atau penelitian farmakologi. Dalam konteks
+            penelitian ini, tanaman herbal menjadi salah satu entitas penting yang perlu dikenali
+            dari teks jurnal.
+        </p>
+
+        <div class="herbal-grid">
+            <div class="herbal-card">
+                <h3>Jahe</h3>
+                <p>
+                    Jahe sering ditemukan dalam penelitian herbal karena mengandung senyawa
+                    bioaktif seperti gingerol. Dalam teks ilmiah, jahe dapat muncul sebagai
+                    objek penelitian atau bahan terapi herbal.
+                </p>
+                <span class="tag">HERB</span>
+            </div>
+
+            <div class="herbal-card">
+                <h3>Kunyit</h3>
+                <p>
+                    Kunyit dikenal memiliki kandungan kurkumin. Pada abstrak jurnal,
+                    kunyit sering dikaitkan dengan efek antiinflamasi, antioksidan,
+                    atau aktivitas farmakologis lainnya.
+                </p>
+                <span class="tag">HERB</span>
+            </div>
+
+            <div class="herbal-card">
+                <h3>Daun Sirih</h3>
+                <p>
+                    Daun sirih banyak digunakan dalam kajian herbal, terutama yang berkaitan
+                    dengan antibakteri, luka, dan kesehatan mulut. Nama ilmiahnya sering
+                    ditulis sebagai Piper betle.
+                </p>
+                <span class="tag">HERB</span>
+            </div>
+
+            <div class="herbal-card">
+                <h3>Temulawak</h3>
+                <p>
+                    Temulawak merupakan tanaman rimpang yang sering dibahas dalam penelitian
+                    terkait senyawa aktif dan efek biologis terhadap tubuh.
+                </p>
+                <span class="tag">HERB</span>
+            </div>
+
+            <div class="herbal-card">
+                <h3>Lidah Buaya</h3>
+                <p>
+                    Lidah buaya atau Aloe vera sering muncul dalam penelitian mengenai
+                    perawatan kulit, penyembuhan luka, dan aktivitas antiinflamasi.
+                </p>
+                <span class="tag">HERB</span>
+            </div>
+
+            <div class="herbal-card">
+                <h3>Sambiloto</h3>
+                <p>
+                    Sambiloto sering dikaji karena kandungan senyawa andrographolide.
+                    Dalam teks jurnal, tanaman ini dapat berhubungan dengan efek imunologi
+                    atau aktivitas antimikroba.
+                </p>
+                <span class="tag">HERB</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="ner">
+        <h2 class="section-title">Named Entity Recognition</h2>
+        <p class="section-subtitle">
+            Masukkan informasi jurnal dan abstrak pada form berikut, lalu pilih model
+            yang ingin digunakan untuk melakukan prediksi entitas.
+        </p>
+
+        <div class="ner-card">
+            <form method="POST" action="#ner">
+                <div class="form-grid">
+                    <div>
+                        <label for="judul">Judul Jurnal</label>
+                        <input type="text" id="judul" name="judul" value="{{ judul }}" placeholder="Masukkan judul jurnal">
+                    </div>
+
+                    <div>
+                        <label for="penulis">Nama Penulis</label>
+                        <input type="text" id="penulis" name="penulis" value="{{ penulis }}" placeholder="Masukkan nama penulis">
+                    </div>
+
+                    <div>
+                        <label for="tahun">Tahun Terbit</label>
+                        <input type="text" id="tahun" name="tahun" value="{{ tahun }}" placeholder="Tahun">
+                    </div>
+                </div>
+
+                <label for="abstrak">Abstrak</label>
+                <textarea id="abstrak" name="abstrak" placeholder="Masukkan abstrak jurnal di sini">{{ input_text }}</textarea>
+
+                <div class="radio-group">
+                    <strong>Pilih Model:</strong><br><br>
+
+                    <label>
+                        <input type="radio" name="model" value="bilstm"
+                               {% if model_choice == "bilstm" %}checked{% endif %}>
+                        BiLSTM
+                    </label>
+
+                    <label>
+                        <input type="radio" name="model" value="naive_bayes"
+                               {% if model_choice == "naive_bayes" %}checked{% endif %}>
+                        Naive Bayes
+                    </label>
+                </div>
+
+                <button type="submit" class="button-submit">Proses NER</button>
+            </form>
+
+            {% if output_text %}
+                <div class="result-section">
+                    <h2>{{ model_output_title }}</h2>
+
+                    <div class="model-info">
+                        <strong>Model yang dipilih:</strong> {{ model_name }}<br>
+                        <strong>Keterangan:</strong> {{ model_description }}<br>
+
+                        <span class="model-badge">{{ model_role }}</span>
+                        <span class="model-badge">{{ model_score }}</span>
+                    </div>
+
+                    <h3>Legenda Entitas</h3>
+                    <div class="legend">
+                        <span class="highlight-HERB">HERB</span>
+                        <span class="highlight-BODY_PART">BODY_PART</span>
+                        <span class="highlight-DISEASE">DISEASE</span>
+                        <span class="highlight-COMPOUND">COMPOUND</span>
+                        <span class="highlight-EFFECT">EFFECT</span>
+                        <span class="highlight-TREATMENT">TREATMENT</span>
+                        <span class="highlight-METHOD">METHOD</span>
+                        <span class="highlight-POPULATION">POPULATION</span>
+                    </div>
+
+                    <div class="output-box">
+                        {{ output_text|safe }}
+                    </div>
+
+                    <h3>Tabel Klasifikasi</h3>
+                    <table>
+                        <tr>
+                            <th>Tumbuhan (HERB)</th>
+                            <th>Anggota Tubuh (BODY_PART)</th>
+                            <th>Penyakit (DISEASE)</th>
+                        </tr>
+                        <tr>
+                            <td>{% if herbs %}{{ herbs }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                            <td>{% if body_parts %}{{ body_parts }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                            <td>{% if diseases %}{{ diseases }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Senyawa (COMPOUND)</th>
+                            <th>Efek (EFFECT)</th>
+                            <th>Terapi (TREATMENT)</th>
+                        </tr>
+                        <tr>
+                            <td>{% if compounds %}{{ compounds }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                            <td>{% if effects %}{{ effects }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                            <td>{% if treatments %}{{ treatments }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Metode (METHOD)</th>
+                            <th>Populasi (POPULATION)</th>
+                            <th>Model</th>
+                        </tr>
+                        <tr>
+                            <td>{% if methods %}{{ methods }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                            <td>{% if populations %}{{ populations }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                            <td>{{ model_name }}</td>
+                        </tr>
+                    </table>
+
+                    <h3>Detail Entitas Terdeteksi</h3>
+                    <table>
+                        <tr>
+                            <th>No</th>
+                            <th>Entitas</th>
+                            <th>Label</th>
+                        </tr>
+
+                        {% if entities %}
+                            {% for item in entities %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ item.entity }}</td>
+                                    <td>{{ item.label }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="empty-value">Tidak ada entitas yang terdeteksi</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+
+                    <h3>Informasi Jurnal</h3>
+                    <table>
+                        <tr>
+                            <th>Judul Jurnal</th>
+                            <td>{% if judul %}{{ judul }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Nama Penulis</th>
+                            <td>{% if penulis %}{{ penulis }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Tahun Terbit</th>
+                            <td>{% if tahun %}{{ tahun }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Waktu Proses</th>
+                            <td>{{ timestamp }}</td>
+                        </tr>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    Named Entity Recognition pada Tanaman Herbal | BiLSTM dan Naive Bayes | Copyright © 2026 REZA. All rights reserved.
+</footer>
+```
 
 </body>
 </html>
