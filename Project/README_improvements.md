@@ -1,95 +1,277 @@
-# NER Model F1 Score Improvement Guide
+# Named Entity Recognition pada Tanaman Herbal
 
-## Problem Analysis
+Project ini merupakan implementasi **Named Entity Recognition (NER)** pada teks jurnal tanaman herbal menggunakan pendekatan **BIO Tagging**. Sistem ini dibuat untuk mengenali entitas penting dalam abstrak jurnal herbal, seperti nama tanaman, penyakit, anggota tubuh, senyawa, efek, terapi, metode, dan populasi.
 
-Your current NER model shows very low F1 scores (mostly below 0.3) due to:
+Project ini menggunakan dua model pembelajaran mesin, yaitu **BiLSTM** sebagai model utama dan **Naive Bayes** sebagai model pembanding. Hasil prediksi model kemudian ditampilkan melalui aplikasi web berbasis **Flask**.
 
-- **Severe class imbalance**: "O" class dominates with 1098 samples
-- **Poor recall**: Most entity classes have recall < 0.75
-- **Poor precision**: Most entity classes have precision < 0.32
-- **Zero support**: I-BODY_PART has 0 support
+---
 
-## Solution Overview
+## Fitur Utama
 
-### 1. Enhanced Model Architecture
+- Input data jurnal berupa:
+  - Judul jurnal
+  - Nama penulis
+  - Tahun terbit
+  - Abstrak jurnal
 
-- **Bidirectional LSTM**: Replaced unidirectional LSTM with BiLSTM for better context
-- **Multi-head Attention**: Added attention mechanism for better feature extraction
-- **Layer Normalization**: Improved training stability
-- **Increased capacity**: Larger embedding (256 vs 128) and LSTM units (256 vs 128)
+- Pilihan model prediksi:
+  - BiLSTM
+  - Naive Bayes
 
-### 2. Data Augmentation
+- Menampilkan hasil prediksi entitas dalam bentuk highlight teks.
+- Menampilkan tabel klasifikasi entitas.
+- Menampilkan detail entitas yang terdeteksi.
+- Menampilkan informasi jurnal yang diproses.
+- Tampilan web bertema tanaman herbal.
 
-- **Synonym replacement**: Replace non-entity words with synonyms
-- **Oversampling**: Increase minority class samples
-- **Entity-specific augmentation**: Focus on underrepresented entities
+---
 
-### 3. Training Improvements
+## Entitas yang Dikenali
 
-- **Enhanced class weights**: Better handling of class imbalance
-- **Early stopping**: Prevent overfitting
-- **Learning rate scheduling**: Better convergence
-- **Increased epochs**: 50 vs 8 for better training
+Sistem ini mengenali beberapa label entitas berikut:
 
-### 4. Evaluation Metrics
+| Label      | Keterangan                       |
+| ---------- | -------------------------------- |
+| HERB       | Nama tanaman herbal              |
+| BODY_PART  | Anggota tubuh                    |
+| DISEASE    | Penyakit atau keluhan            |
+| COMPOUND   | Senyawa atau kandungan aktif     |
+| EFFECT     | Efek atau aktivitas biologis     |
+| TREATMENT  | Terapi atau bentuk pengobatan    |
+| METHOD     | Metode penelitian atau pengujian |
+| POPULATION | Populasi atau subjek penelitian  |
 
-- **Per-entity F1 scores**: Focus on entity-level performance
-- **Comprehensive reporting**: Detailed improvement tracking
+---
 
-## Files Created
+## Model yang Digunakan
 
-1. **improved_ner_model.py**: Enhanced NER model with all improvements
-2. **run_improvements.py**: Script to run the complete improvement pipeline
-3. **requirements.txt**: Required dependencies
+### 1. BiLSTM
 
-## How to Run
+BiLSTM digunakan sebagai model utama karena mampu mempelajari konteks token dari dua arah, yaitu dari token sebelumnya dan token sesudahnya. Model ini lebih sesuai untuk tugas NER berbasis urutan token dan BIO tagging.
 
-### Step 1: Install Dependencies
+Hasil evaluasi model BiLSTM:
+
+```text
+Precision : 0.5695
+Recall    : 0.6719
+F1-score  : 0.6165
+```
+
+### 2. Naive Bayes
+
+Naive Bayes digunakan sebagai model pembanding atau baseline. Model ini melakukan klasifikasi berdasarkan fitur token, tetapi memiliki keterbatasan dalam memahami hubungan sekuensial antar-token.
+
+Hasil evaluasi model Naive Bayes:
+
+```text
+Precision : 0.2596
+Recall    : 0.7891
+F1-score  : 0.3907
+```
+
+---
+
+## Teknologi yang Digunakan
+
+- Python
+- Flask
+- TensorFlow / Keras
+- NumPy
+- Scikit-learn
+- HTML
+- CSS
+- Pickle
+
+---
+
+## Struktur Folder Project
+
+```text
+Project/
+├── app.py
+├── models/
+│   ├── bilstm_ner_weights.weights.h5
+│   ├── naive_bayes_ner_model.pkl
+│   └── ner_mappings.pkl
+├── templates/
+│   └── index.html
+├── static/
+│   └── img/
+│       ├── hero-ner.png
+│       ├── jahe.png
+│       ├── kunyit.png
+│       ├── daun-sirih.png
+│       ├── temulawak.png
+│       ├── lidah-buaya.png
+│       └── sambiloto.png
+├── requirements.txt
+└── README.md
+```
+
+Catatan: folder `static/img/` bersifat opsional. Jika gambar belum tersedia, website tetap dapat berjalan, tetapi tampilan visual tanaman herbal tidak akan muncul.
+
+---
+
+## Instalasi
+
+### 1. Clone repository
+
+```bash
+git clone https://github.com/username/nama-repository.git
+cd nama-repository
+```
+
+### 2. Buat virtual environment
+
+```bash
+python -m venv venv
+```
+
+Aktifkan virtual environment.
+
+Untuk Windows PowerShell:
+
+```powershell
+.\venv\Scripts\activate
+```
+
+Untuk Linux/Mac:
+
+```bash
+source venv/bin/activate
+```
+
+### 3. Install dependency
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 2: Run the Improvement Pipeline
+Jika belum memiliki file `requirements.txt`, install library berikut:
 
 ```bash
-python run_improvements.py
+pip install flask tensorflow numpy scikit-learn markupsafe
 ```
 
-### Step 3: Check Results
+---
 
-- Model files: `enhanced_ner_model.keras`, `enhanced_mappings.pkl`
-- Results: `f1_improvement_results.csv`
+## File Model
 
-## Expected Improvements
+Aplikasi membutuhkan tiga file model berikut di dalam folder `models/`:
 
-Based on the enhancements, you should see:
+```text
+models/
+├── bilstm_ner_weights.weights.h5
+├── naive_bayes_ner_model.pkl
+└── ner_mappings.pkl
+```
 
-- **50-200% improvement** in F1 scores for minority classes
-- **Better recall** for underrepresented entities
-- **Reduced false positives** through attention mechanism
-- **More stable training** through layer normalization
+Keterangan:
 
-## Advanced Options
+| File                            | Fungsi                                                 |
+| ------------------------------- | ------------------------------------------------------ |
+| `bilstm_ner_weights.weights.h5` | Bobot model BiLSTM                                     |
+| `naive_bayes_ner_model.pkl`     | Model Naive Bayes                                      |
+| `ner_mappings.pkl`              | Mapping token, label, threshold, dan konfigurasi model |
 
-### For Even Better Results:
+File model tidak disertakan secara otomatis jika ukurannya besar. Pastikan file model sudah diletakkan di folder `models/` sebelum menjalankan aplikasi.
 
-1. **Transformer Models**: Consider using BERT/RoBERTa
-2. **Ensemble Methods**: Combine multiple models
-3. **Active Learning**: Add more training data
-4. **Domain-specific Preprocessing**: Add medical/herbal dictionaries
+---
 
-### Troubleshooting
+## Menjalankan Aplikasi
 
-- If memory issues occur, reduce `BATCH_SIZE` to 32 or 16
-- If training is slow, reduce `EMBED_DIM` and `LSTM_UNITS`
-- For very small datasets, reduce `AUGMENTATION_FACTOR`
+Jalankan perintah berikut dari folder project:
 
-## Monitoring Progress
+```bash
+python app.py
+```
 
-The script will show:
+Setelah server berjalan, buka browser dan akses:
 
-- Class distribution analysis
-- Training progress
-- Detailed improvement metrics
-- Final comparison with original results
+```text
+http://127.0.0.1:5000/
+```
+
+---
+
+## Cara Penggunaan
+
+1. Masukkan judul jurnal.
+2. Masukkan nama penulis.
+3. Masukkan tahun terbit.
+4. Masukkan abstrak jurnal tanaman herbal.
+5. Pilih model:
+   - BiLSTM
+   - Naive Bayes
+
+6. Klik tombol **Proses NER**.
+7. Sistem akan menampilkan:
+   - Output teks dengan highlight entitas
+   - Tabel klasifikasi entitas
+   - Detail entitas terdeteksi
+   - Informasi jurnal
+
+---
+
+## Contoh Entitas
+
+Contoh input:
+
+```text
+Rebusan jahe digunakan untuk mengurangi keluhan mual muntah pada ibu hamil.
+```
+
+Contoh entitas yang dapat dikenali:
+
+| Entitas     | Label      |
+| ----------- | ---------- |
+| jahe        | HERB       |
+| mual muntah | DISEASE    |
+| ibu hamil   | POPULATION |
+
+---
+
+## Catatan Pengembangan
+
+Model BiLSTM pada project ini menggunakan mekanisme load weights, bukan load model penuh `.keras` atau `.h5`. Hal ini dilakukan untuk menghindari masalah kompatibilitas versi TensorFlow/Keras, terutama error pada konfigurasi layer seperti `quantization_config`.
+
+Aplikasi membangun ulang arsitektur BiLSTM di `app.py`, kemudian memuat bobot dari file:
+
+```text
+bilstm_ner_weights.weights.h5
+```
+
+---
+
+## Keterbatasan Sistem
+
+Sistem ini masih memiliki beberapa keterbatasan:
+
+- Dataset masih terbatas.
+- Distribusi label tidak seimbang.
+- Beberapa label memiliki jumlah data yang kecil.
+- Model masih dapat menghasilkan kesalahan prediksi.
+- Beberapa entitas dapat tidak terdeteksi jika konteks kalimat terlalu pendek.
+- Naive Bayes memiliki keterbatasan dalam memahami hubungan urutan token.
+
+Oleh karena itu, hasil prediksi pada website sebaiknya dipahami sebagai hasil prediksi model, bukan sebagai hasil anotasi yang sepenuhnya pasti benar.
+
+---
+
+## Tujuan Penelitian
+
+Project ini dibuat sebagai bagian dari penelitian mengenai penerapan Named Entity Recognition pada teks tanaman herbal. Sistem ini bertujuan untuk membantu proses ekstraksi informasi dari teks jurnal herbal agar entitas penting dapat ditampilkan secara lebih terstruktur.
+
+---
+
+## Author
+
+**Reza Alfiah**
+Program Studi Informatika
+Universitas Gunadarma
+
+---
+
+## License
+
+Project ini dibuat untuk kebutuhan akademik dan penelitian.
