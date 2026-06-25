@@ -266,7 +266,7 @@ Project ini dibuat sebagai bagian dari penelitian mengenai penerapan Named Entit
 
 ## Author
 
-**Reza Alfiah**
+**Reza Alfiansyah**
 Program Studi Informatika
 Universitas Gunadarma
 
