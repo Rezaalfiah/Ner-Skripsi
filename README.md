@@ -268,6 +268,8 @@ Apabila aplikasi masih mengalami error, hasil prediksi belum sesuai, atau terdap
 
 Project ini masih bersifat akademik dan eksperimental, sehingga hasil prediksi model sebaiknya digunakan sebagai bantuan analisis awal, bukan sebagai hasil anotasi final yang sepenuhnya pasti benar.
 
+---
+
 ## Tujuan Penelitian
 
 Project ini dibuat sebagai bagian dari penelitian mengenai penerapan Named Entity Recognition pada teks tanaman herbal. Sistem ini bertujuan untuk membantu proses ekstraksi informasi dari teks jurnal herbal agar entitas penting dapat ditampilkan secara lebih terstruktur.
