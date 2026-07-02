@@ -258,6 +258,16 @@ Oleh karena itu, hasil prediksi pada website sebaiknya dipahami sebagai hasil pr
 
 ---
 
+## Disclaimer
+
+Project ini dikembangkan menggunakan dataset NER tanaman herbal yang berfokus pada 10 jenis tanaman, yaitu temulawak, jahe, kunyit, mengkudu, lengkuas, sambiloto, daun sirih, pegagan, kelor, dan kumis kucing.
+
+Dataset disusun menggunakan pendekatan BIO Tagging berdasarkan teks jurnal atau artikel ilmiah berbahasa Indonesia. Oleh karena itu, performa model bergantung pada kualitas dataset, konsistensi pelabelan, jumlah data, serta distribusi label pada setiap entitas.
+
+Apabila aplikasi masih mengalami error, hasil prediksi belum sesuai, atau terdapat kendala saat memuat file model, pengguna dapat menjalankan ulang proses training menggunakan dataset terbaru yang telah dikoreksi. Training ulang diperlukan apabila terdapat perubahan pada token, label, mapping, atau format dataset.
+
+Project ini masih bersifat akademik dan eksperimental, sehingga hasil prediksi model sebaiknya digunakan sebagai bantuan analisis awal, bukan sebagai hasil anotasi final yang sepenuhnya pasti benar.
+
 ## Tujuan Penelitian
 
 Project ini dibuat sebagai bagian dari penelitian mengenai penerapan Named Entity Recognition pada teks tanaman herbal. Sistem ini bertujuan untuk membantu proses ekstraksi informasi dari teks jurnal herbal agar entitas penting dapat ditampilkan secara lebih terstruktur.
