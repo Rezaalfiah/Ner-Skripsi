@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Kalau venv ada di dalam folder Project
+Project/venv/
+Project/.venv/
+
+# Environment / secret
+.env
+.env.*
+Project/.env
+Project/.env.*
+
+# VS Code
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Dataset, kalau tidak mau ikut GitHub
+*.csv
+*.xlsx
+
+# Model hasil training, kalau tidak mau ikut GitHub
+*.pkl
+*.h5
+*.joblib
+*.pt
+*.pth
+*.onnx
+models/
+Project/models/
