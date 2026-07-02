@@ -52,9 +52,9 @@ BiLSTM digunakan sebagai model utama karena mampu mempelajari konteks token dari
 Hasil evaluasi model BiLSTM:
 
 ```text
-Precision : 0.5695
-Recall    : 0.6719
-F1-score  : 0.6165
+Precision : 0.8333
+Recall    : 0.8223
+F1-score  : 0.8278
 ```
 
 ### 2. Naive Bayes
@@ -64,9 +64,9 @@ Naive Bayes digunakan sebagai model pembanding atau baseline. Model ini melakuka
 Hasil evaluasi model Naive Bayes:
 
 ```text
-Precision : 0.2596
-Recall    : 0.7891
-F1-score  : 0.3907
+Precision : 0.4230
+Recall    : 0.8684
+F1-score  : 0.5689
 ```
 
 ---
@@ -260,7 +260,7 @@ Oleh karena itu, hasil prediksi pada website sebaiknya dipahami sebagai hasil pr
 
 ## Disclaimer
 
-Project ini dikembangkan menggunakan dataset NER tanaman herbal yang berfokus pada 10 jenis tanaman, yaitu temulawak, jahe, kunyit, mengkudu, lengkuas, sambiloto, daun sirih, pegagan, kelor, dan kumis kucing.
+Project ini dikembangkan menggunakan dataset NER tanaman herbal yang berfokus pada 10 jenis tanaman, yaitu temulawak, jahe, kunyit, mengkudu, lengkuas, sambiloto, daun sirih, pegagan, kelor, dan kumis kucing.f1
 
 Dataset disusun menggunakan pendekatan BIO Tagging berdasarkan teks jurnal atau artikel ilmiah berbahasa Indonesia. Oleh karena itu, performa model bergantung pada kualitas dataset, konsistensi pelabelan, jumlah data, serta distribusi label pada setiap entitas.
 
