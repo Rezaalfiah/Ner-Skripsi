@@ -32,8 +32,8 @@ Thumbs.db
 *.log
 
 # Dataset, kalau tidak mau ikut GitHub
-*.csv
-*.xlsx
+# *.csv
+# *.xlsx
 
 # Model hasil training, kalau tidak mau ikut GitHub
 *.pkl

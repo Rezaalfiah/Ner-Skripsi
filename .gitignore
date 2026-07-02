@@ -51,8 +51,8 @@ Thumbs.db
 # =========================
 # Dataset hasil proses
 # =========================
-*.csv
-*.xlsx
+# *.csv
+# *.xlsx
 
 # =========================
 # Model training artifacts
