@@ -1,11 +1,66 @@
-# Python
-venv/
-.env
+# =========================
+# Python cache
+# =========================
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 
-# VSCode
+# =========================
+# Virtual environment
+# =========================
+venv/
+.venv/
+env/
+ENV/
+
+# =========================
+# Flask
+# =========================
+instance/
+.webassets-cache
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+*.env
+
+# =========================
+# VS Code / editor
+# =========================
 .vscode/
+.idea/
 
-# OS
+# =========================
+# OS files
+# =========================
 .DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Jupyter / notebook checkpoints
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Dataset hasil proses
+# =========================
+*.csv
+*.xlsx
+
+# =========================
+# Model training artifacts
+# =========================
+*.pkl
+*.h5
+*.joblib
+*.pt
+*.pth
+*.onnx
+models/

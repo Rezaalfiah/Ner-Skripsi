@@ -148,7 +148,7 @@ MODEL_INFO = {
             "untuk tugas Named Entity Recognition berbasis BIO tagging."
         ),
         "role": "Model utama",
-        "score": "F1-score: 0.6165"
+        "score": "F1-score: 0.8278"
     },
     "naive_bayes": {
         "name": "Naive Bayes",
@@ -159,7 +159,7 @@ MODEL_INFO = {
             "dalam memahami hubungan sekuensial antar-token."
         ),
         "role": "Model pembanding",
-        "score": "F1-score: 0.3907"
+        "score": "F1-score: 0.5689"
     }
 }
 
