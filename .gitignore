@@ -63,3 +63,5 @@ Thumbs.db
 *.pt
 *.pth
 *.onnx
+# Codex/agent configuration
+.agents/
