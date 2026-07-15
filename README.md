@@ -8,93 +8,132 @@ app_port: 7860
 pinned: false
 ---
 
-# Named Entity Recognition pada Tanaman Herbal
+# NER Tanaman Herbal
 
-Project ini merupakan implementasi **Named Entity Recognition (NER)** pada teks jurnal tanaman herbal menggunakan pendekatan **BIO Tagging**. Sistem ini dibuat untuk mengenali entitas penting dalam abstrak jurnal herbal, seperti nama tanaman, penyakit, anggota tubuh, senyawa, efek, terapi, metode, dan populasi.
+Aplikasi web untuk mengenali entitas penting dalam abstrak jurnal tanaman herbal berbahasa Indonesia. Teks diproses menggunakan skema **BIO tagging**, kemudian setiap entitas yang ditemukan ditandai pada teks dan dirangkum dalam tabel agar hasilnya lebih mudah dibaca.
 
-Project ini menggunakan dua model pembelajaran mesin, yaitu **BiLSTM** sebagai model utama dan **Naive Bayes** sebagai model pembanding. Hasil prediksi model kemudian ditampilkan melalui aplikasi web berbasis **Flask**.
+Proyek ini membandingkan dua pendekatan: **Bidirectional Long Short-Term Memory (BiLSTM)** sebagai model utama dan **Naive Bayes** sebagai model baseline. Antarmuka aplikasinya dibangun dengan Flask.
 
----
+## Entitas yang dikenali
 
-## Fitur Utama
+| Label | Keterangan |
+| --- | --- |
+| `HERB` | Nama tanaman herbal |
+| `BODY_PART` | Bagian atau anggota tubuh |
+| `DISEASE` | Penyakit atau keluhan |
+| `COMPOUND` | Senyawa atau kandungan aktif |
+| `EFFECT` | Efek atau aktivitas biologis |
+| `TREATMENT` | Terapi atau bentuk pengobatan |
+| `METHOD` | Metode penelitian atau pengujian |
+| `POPULATION` | Populasi atau subjek penelitian |
 
-- Input data jurnal berupa:
-  - Judul jurnal
-  - Nama penulis
-  - Tahun terbit
-  - Abstrak jurnal
+## Fitur aplikasi
 
-- Pilihan model prediksi:
-  - BiLSTM
-  - Naive Bayes
+- Memproses judul, penulis, tahun terbit, dan abstrak jurnal.
+- Menyediakan pilihan model BiLSTM dan Naive Bayes.
+- Menandai entitas secara langsung pada teks hasil prediksi.
+- Merangkum entitas berdasarkan kategori dan menampilkan detail setiap temuan.
+- Menyertakan informasi jurnal serta waktu pemrosesan pada hasil analisis.
 
-- Menampilkan hasil prediksi entitas dalam bentuk highlight teks.
-- Menampilkan tabel klasifikasi entitas.
-- Menampilkan detail entitas yang terdeteksi.
-- Menampilkan informasi jurnal yang diproses.
-- Tampilan web bertema tanaman herbal.
+## Model dan hasil evaluasi
 
----
+BiLSTM membaca urutan token dari dua arah sehingga dapat mempertimbangkan konteks sebelum dan sesudah sebuah token. Naive Bayes digunakan sebagai pembanding yang lebih sederhana karena melakukan klasifikasi berdasarkan fitur token tanpa memodelkan hubungan sekuensial secara langsung.
 
-## Entitas yang Dikenali
+| Model | Peran | Precision | Recall | F1-score |
+| --- | --- | ---: | ---: | ---: |
+| BiLSTM | Model utama | 0.8333 | 0.8223 | 0.8278 |
+| Naive Bayes | Baseline | 0.4230 | 0.8684 | 0.5689 |
 
-Sistem ini mengenali beberapa label entitas berikut:
+Angka di atas merupakan hasil evaluasi pada data penelitian yang digunakan saat model dikembangkan. Nilainya dapat berubah apabila dataset, pembagian data, atau konfigurasi pelatihan diperbarui.
 
-| Label      | Keterangan                       |
-| ---------- | -------------------------------- |
-| HERB       | Nama tanaman herbal              |
-| BODY_PART  | Anggota tubuh                    |
-| DISEASE    | Penyakit atau keluhan            |
-| COMPOUND   | Senyawa atau kandungan aktif     |
-| EFFECT     | Efek atau aktivitas biologis     |
-| TREATMENT  | Terapi atau bentuk pengobatan    |
-| METHOD     | Metode penelitian atau pengujian |
-| POPULATION | Populasi atau subjek penelitian  |
+## Teknologi
 
----
-
-## Model yang Digunakan
-
-### 1. BiLSTM
-
-BiLSTM digunakan sebagai model utama karena mampu mempelajari konteks token dari dua arah, yaitu dari token sebelumnya dan token sesudahnya. Model ini lebih sesuai untuk tugas NER berbasis urutan token dan BIO tagging.
-
-Hasil evaluasi model BiLSTM:
-
-```text
-Precision : 0.8333
-Recall    : 0.8223
-F1-score  : 0.8278
-```
-
-### 2. Naive Bayes
-
-Naive Bayes digunakan sebagai model pembanding atau baseline. Model ini melakukan klasifikasi berdasarkan fitur token, tetapi memiliki keterbatasan dalam memahami hubungan sekuensial antar-token.
-
-Hasil evaluasi model Naive Bayes:
-
-```text
-Precision : 0.4230
-Recall    : 0.8684
-F1-score  : 0.5689
-```
-
----
-
-## Teknologi yang Digunakan
-
-- Python
-- Flask
-- TensorFlow / Keras
-- NumPy
+- Python 3.10
+- Flask dan Gunicorn
+- TensorFlow/Keras
 - Scikit-learn
-- HTML
-- CSS
-- Pickle
+- NumPy
+- HTML dan CSS
 
----
+## Menjalankan aplikasi secara lokal
 
-## Struktur Folder Project
+### 1. Kloning repositori
+
+```bash
+git clone https://github.com/Rezaalfiah/Ner-Skripsi.git
+cd Ner-Skripsi
+```
+
+### 2. Siapkan virtual environment
+
+```bash
+python -m venv venv
+```
+
+Aktifkan environment sesuai sistem operasi yang digunakan.
+
+Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+Linux atau macOS:
+
+```bash
+source venv/bin/activate
+```
+
+### 3. Pasang dependensi
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Jalankan server
+
+```bash
+python app.py
+```
+
+Setelah server aktif, buka `http://127.0.0.1:5000` melalui browser.
+
+## Menjalankan dengan Docker
+
+Bangun image dan jalankan container dari direktori utama proyek:
+
+```bash
+docker build -t ner-tanaman-herbal .
+docker run --rm -p 7860:7860 ner-tanaman-herbal
+```
+
+Aplikasi dapat diakses melalui `http://127.0.0.1:7860`.
+
+## Cara menggunakan
+
+1. Isi judul jurnal, nama penulis, tahun terbit, dan abstrak yang akan dianalisis.
+2. Pilih model BiLSTM atau Naive Bayes.
+3. Tekan **Proses NER**.
+4. Periksa teks yang telah diberi penanda serta tabel entitas di bagian hasil.
+
+Contoh teks masukan:
+
+```text
+Rebusan jahe digunakan untuk mengurangi keluhan mual muntah pada ibu hamil.
+```
+
+Contoh entitas yang dapat dikenali:
+
+| Teks | Label |
+| --- | --- |
+| jahe | `HERB` |
+| mual muntah | `DISEASE` |
+| ibu hamil | `POPULATION` |
+
+Hasil aktual tetap bergantung pada konteks kalimat dan kemampuan model dalam mengenali pola yang pernah dipelajari.
+
+## Struktur repositori
 
 ```text
 Ner-Skripsi/
@@ -110,211 +149,54 @@ Ner-Skripsi/
 ├── static/
 │   ├── style.css
 │   └── images/
-├── Dataset_NER_BIO_Tagging_Final.csv
-├── NER_BiLSTM_NB_FIXED.ipynb
 ├── .dockerignore
 ├── .gitignore
 └── README.md
 ```
 
-Folder `models/`, `templates/`, dan `static/` harus berada sejajar dengan `app.py` agar aplikasi dapat menemukannya saat dijalankan secara lokal maupun melalui Docker.
+Direktori `models`, `templates`, dan `static` harus tetap berada sejajar dengan `app.py` karena lokasi tersebut digunakan langsung oleh aplikasi.
 
----
+### Berkas model
 
-## Instalasi
+| Berkas | Kegunaan |
+| --- | --- |
+| `bilstm_ner_weights.weights.h5` | Bobot model BiLSTM |
+| `naive_bayes_ner_model.pkl` | Model Naive Bayes yang telah dilatih |
+| `ner_mappings.pkl` | Kosakata, label, threshold, dan konfigurasi pemrosesan model |
 
-### 1. Clone repository
-
-```bash
-git clone https://github.com/username/nama-repository.git
-cd nama-repository
-```
-
-### 2. Buat virtual environment
-
-```bash
-python -m venv venv
-```
-
-Aktifkan virtual environment.
-
-Untuk Windows PowerShell:
-
-```powershell
-.\venv\Scripts\activate
-```
-
-Untuk Linux/Mac:
-
-```bash
-source venv/bin/activate
-```
-
-### 3. Install dependency
-
-```bash
-pip install -r requirements.txt
-```
-
-Jika belum memiliki file `requirements.txt`, install library berikut:
-
-```bash
-pip install flask tensorflow numpy scikit-learn markupsafe
-```
-
----
-
-## File Model
-
-Aplikasi membutuhkan tiga file model berikut di dalam folder `models/`:
-
-```text
-models/
-├── bilstm_ner_weights.weights.h5
-├── naive_bayes_ner_model.pkl
-└── ner_mappings.pkl
-```
-
-Keterangan:
-
-| File                            | Fungsi                                                 |
-| ------------------------------- | ------------------------------------------------------ |
-| `bilstm_ner_weights.weights.h5` | Bobot model BiLSTM                                     |
-| `naive_bayes_ner_model.pkl`     | Model Naive Bayes                                      |
-| `ner_mappings.pkl`              | Mapping token, label, threshold, dan konfigurasi model |
-
-Ketiga file model disertakan dalam repository dan harus tetap berada di folder `models/` agar aplikasi dapat dijalankan dan di-deploy.
-
----
-
-## Menjalankan Aplikasi
-
-Jalankan perintah berikut dari folder project:
-
-```bash
-python app.py
-```
-
-Setelah server berjalan, buka browser dan akses:
-
-```text
-http://127.0.0.1:5000/
-```
-
----
+Arsitektur BiLSTM dibangun kembali di `app.py`, kemudian bobotnya dimuat dari `bilstm_ner_weights.weights.h5`. Pendekatan ini digunakan agar proses pemuatan model lebih konsisten dengan versi TensorFlow/Keras pada aplikasi.
 
 ## Deployment ke Hugging Face Spaces
 
-Repository ini sudah dikonfigurasi sebagai Docker Space dengan port `7860`.
+Repositori ini telah dikonfigurasi sebagai **Docker Space** dan menggunakan port `7860`.
 
-1. Buat Space baru di Hugging Face.
-2. Pilih **Docker** sebagai SDK dan **CPU Basic** sebagai hardware.
-3. Tambahkan repository Space sebagai remote Git:
+1. Buat Space baru di Hugging Face dan pilih **Docker** sebagai SDK.
+2. Tambahkan Space sebagai remote Git:
 
-```bash
-git remote add hf https://huggingface.co/spaces/USERNAME/ner-skripsi
-```
+   ```bash
+   git remote add hf https://huggingface.co/spaces/USERNAME/ner-skripsi
+   ```
 
-4. Untuk deployment pertama, kirim branch lokal `master` ke branch `main` milik Space:
+3. Kirim branch lokal ke branch `main` pada Space:
 
-```bash
-git push --force hf master:main
-```
+   ```bash
+   git push hf master:main
+   ```
 
-Ganti `USERNAME` dengan username Hugging Face. Gunakan Hugging Face Access Token dengan izin tulis ketika Git meminta password. Deployment berikutnya cukup menggunakan `git push hf master:main`.
+Ganti `USERNAME` dengan nama pengguna Hugging Face. Saat diminta kredensial, gunakan Hugging Face Access Token yang memiliki izin tulis.
 
----
+## Ruang lingkup dan keterbatasan
 
-## Cara Penggunaan
+Dataset penelitian berfokus pada sepuluh tanaman: temulawak, jahe, kunyit, mengkudu, lengkuas, sambiloto, daun sirih, pegagan, kelor, dan kumis kucing. Karena cakupan data serta distribusi label masih terbatas, model dapat melewatkan entitas atau memberikan label yang kurang tepat, terutama pada istilah dan susunan kalimat yang belum banyak muncul dalam data pelatihan.
 
-1. Masukkan judul jurnal.
-2. Masukkan nama penulis.
-3. Masukkan tahun terbit.
-4. Masukkan abstrak jurnal tanaman herbal.
-5. Pilih model:
-   - BiLSTM
-   - Naive Bayes
+Aplikasi ini ditujukan untuk penelitian dan eksplorasi awal. Hasil prediksi tidak menggantikan anotasi manual, penilaian ahli, ataupun pertimbangan medis. Pelatihan ulang diperlukan apabila kosakata, label, pemetaan, format dataset, atau data penelitian mengalami perubahan.
 
-6. Klik tombol **Proses NER**.
-7. Sistem akan menampilkan:
-   - Output teks dengan highlight entitas
-   - Tabel klasifikasi entitas
-   - Detail entitas terdeteksi
-   - Informasi jurnal
+## Tentang penelitian
 
----
+Proyek ini dikembangkan sebagai bagian dari penelitian mengenai penerapan Named Entity Recognition pada teks tanaman herbal. Tujuannya adalah membantu mengekstrak informasi dari abstrak jurnal berbahasa Indonesia dan menyajikannya dalam bentuk yang lebih terstruktur.
 
-## Contoh Entitas
+**Reza Alfiansyah** — Program Studi Informatika, Universitas Gunadarma
 
-Contoh input:
+## Lisensi
 
-```text
-Rebusan jahe digunakan untuk mengurangi keluhan mual muntah pada ibu hamil.
-```
-
-Contoh entitas yang dapat dikenali:
-
-| Entitas     | Label      |
-| ----------- | ---------- |
-| jahe        | HERB       |
-| mual muntah | DISEASE    |
-| ibu hamil   | POPULATION |
-
----
-
-## Catatan Pengembangan
-
-Model BiLSTM pada project ini menggunakan mekanisme load weights, bukan load model penuh `.keras` atau `.h5`. Hal ini dilakukan untuk menghindari masalah kompatibilitas versi TensorFlow/Keras, terutama error pada konfigurasi layer seperti `quantization_config`.
-
-Aplikasi membangun ulang arsitektur BiLSTM di `app.py`, kemudian memuat bobot dari file:
-
-```text
-bilstm_ner_weights.weights.h5
-```
-
----
-
-## Keterbatasan Sistem
-
-Sistem ini masih memiliki beberapa keterbatasan:
-
-- Dataset masih terbatas.
-- Distribusi label tidak seimbang.
-- Beberapa label memiliki jumlah data yang kecil.
-- Model masih dapat menghasilkan kesalahan prediksi.
-- Beberapa entitas dapat tidak terdeteksi jika konteks kalimat terlalu pendek.
-- Naive Bayes memiliki keterbatasan dalam memahami hubungan urutan token.
-
-Oleh karena itu, hasil prediksi pada website sebaiknya dipahami sebagai hasil prediksi model, bukan sebagai hasil anotasi yang sepenuhnya pasti benar.
-
----
-
-## Disclaimer
-
-Project ini dikembangkan menggunakan dataset NER tanaman herbal yang berfokus pada 10 jenis tanaman, yaitu temulawak, jahe, kunyit, mengkudu, lengkuas, sambiloto, daun sirih, pegagan, kelor, dan kumis kucing.f1
-
-Dataset disusun menggunakan pendekatan BIO Tagging berdasarkan teks jurnal atau artikel ilmiah berbahasa Indonesia. Oleh karena itu, performa model bergantung pada kualitas dataset, konsistensi pelabelan, jumlah data, serta distribusi label pada setiap entitas.
-
-Apabila aplikasi masih mengalami error, hasil prediksi belum sesuai, atau terdapat kendala saat memuat file model, pengguna dapat menjalankan ulang proses training menggunakan dataset terbaru yang telah dikoreksi. Training ulang diperlukan apabila terdapat perubahan pada token, label, mapping, atau format dataset.
-
-Project ini masih bersifat akademik dan eksperimental, sehingga hasil prediksi model sebaiknya digunakan sebagai bantuan analisis awal, bukan sebagai hasil anotasi final yang sepenuhnya pasti benar.
-
----
-
-## Tujuan Penelitian
-
-Project ini dibuat sebagai bagian dari penelitian mengenai penerapan Named Entity Recognition pada teks tanaman herbal. Sistem ini bertujuan untuk membantu proses ekstraksi informasi dari teks jurnal herbal agar entitas penting dapat ditampilkan secara lebih terstruktur.
-
----
-
-## Author
-
-**Reza Alfiansyah**
-Program Studi Informatika
-Universitas Gunadarma
-
----
-
-## License
-
-Project ini dibuat untuk kebutuhan akademik dan penelitian.
+Proyek ini dibuat untuk keperluan akademik dan penelitian. Belum ada lisensi sumber terbuka khusus yang disertakan dalam repositori.
