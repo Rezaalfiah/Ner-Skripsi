@@ -1,6 +1,5 @@
 ---
 title: NER Tanaman Herbal
-emoji: 🌿
 colorFrom: green
 colorTo: yellow
 sdk: docker
@@ -16,16 +15,16 @@ Proyek ini membandingkan dua pendekatan: **Bidirectional Long Short-Term Memory 
 
 ## Entitas yang dikenali
 
-| Label | Keterangan |
-| --- | --- |
-| `HERB` | Nama tanaman herbal |
-| `BODY_PART` | Bagian atau anggota tubuh |
-| `DISEASE` | Penyakit atau keluhan |
-| `COMPOUND` | Senyawa atau kandungan aktif |
-| `EFFECT` | Efek atau aktivitas biologis |
-| `TREATMENT` | Terapi atau bentuk pengobatan |
-| `METHOD` | Metode penelitian atau pengujian |
-| `POPULATION` | Populasi atau subjek penelitian |
+| Label        | Keterangan                       |
+| ------------ | -------------------------------- |
+| `HERB`       | Nama tanaman herbal              |
+| `BODY_PART`  | Bagian atau anggota tubuh        |
+| `DISEASE`    | Penyakit atau keluhan            |
+| `COMPOUND`   | Senyawa atau kandungan aktif     |
+| `EFFECT`     | Efek atau aktivitas biologis     |
+| `TREATMENT`  | Terapi atau bentuk pengobatan    |
+| `METHOD`     | Metode penelitian atau pengujian |
+| `POPULATION` | Populasi atau subjek penelitian  |
 
 ## Fitur aplikasi
 
@@ -39,10 +38,10 @@ Proyek ini membandingkan dua pendekatan: **Bidirectional Long Short-Term Memory 
 
 BiLSTM membaca urutan token dari dua arah sehingga dapat mempertimbangkan konteks sebelum dan sesudah sebuah token. Naive Bayes digunakan sebagai pembanding yang lebih sederhana karena melakukan klasifikasi berdasarkan fitur token tanpa memodelkan hubungan sekuensial secara langsung.
 
-| Model | Peran | Precision | Recall | F1-score |
-| --- | --- | ---: | ---: | ---: |
-| BiLSTM | Model utama | 0.8333 | 0.8223 | 0.8278 |
-| Naive Bayes | Baseline | 0.4230 | 0.8684 | 0.5689 |
+| Model       | Peran       | Precision | Recall | F1-score |
+| ----------- | ----------- | --------: | -----: | -------: |
+| BiLSTM      | Model utama |    0.8333 | 0.8223 |   0.8278 |
+| Naive Bayes | Baseline    |    0.4230 | 0.8684 |   0.5689 |
 
 Angka di atas merupakan hasil evaluasi pada data penelitian yang digunakan saat model dikembangkan. Nilainya dapat berubah apabila dataset, pembagian data, atau konfigurasi pelatihan diperbarui.
 
@@ -125,11 +124,11 @@ Rebusan jahe digunakan untuk mengurangi keluhan mual muntah pada ibu hamil.
 
 Contoh entitas yang dapat dikenali:
 
-| Teks | Label |
-| --- | --- |
-| jahe | `HERB` |
-| mual muntah | `DISEASE` |
-| ibu hamil | `POPULATION` |
+| Teks        | Label        |
+| ----------- | ------------ |
+| jahe        | `HERB`       |
+| mual muntah | `DISEASE`    |
+| ibu hamil   | `POPULATION` |
 
 Hasil aktual tetap bergantung pada konteks kalimat dan kemampuan model dalam mengenali pola yang pernah dipelajari.
 
@@ -158,11 +157,11 @@ Direktori `models`, `templates`, dan `static` harus tetap berada sejajar dengan 
 
 ### Berkas model
 
-| Berkas | Kegunaan |
-| --- | --- |
-| `bilstm_ner_weights.weights.h5` | Bobot model BiLSTM |
-| `naive_bayes_ner_model.pkl` | Model Naive Bayes yang telah dilatih |
-| `ner_mappings.pkl` | Kosakata, label, threshold, dan konfigurasi pemrosesan model |
+| Berkas                          | Kegunaan                                                     |
+| ------------------------------- | ------------------------------------------------------------ |
+| `bilstm_ner_weights.weights.h5` | Bobot model BiLSTM                                           |
+| `naive_bayes_ner_model.pkl`     | Model Naive Bayes yang telah dilatih                         |
+| `ner_mappings.pkl`              | Kosakata, label, threshold, dan konfigurasi pemrosesan model |
 
 Arsitektur BiLSTM dibangun kembali di `app.py`, kemudian bobotnya dimuat dari `bilstm_ner_weights.weights.h5`. Pendekatan ini digunakan agar proses pemuatan model lebih konsisten dengan versi TensorFlow/Keras pada aplikasi.
 
