@@ -516,6 +516,11 @@ def generate_output(predicted):
 # Flask Routes
 # =========================================================
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     input_text = ""

@@ -18,7 +18,7 @@
         <div class="header-inner">
             <div class="header-copy">
                 <span class="eyebrow">Natural Language Processing untuk Herbal</span>
-                <h1>Temukan entitas penting dalam teks <span>tanaman herbal.</span></h1>
+                <h1>Temukan entitas penting dalam teks <span>jurnal tanaman obat keluarga</span></h1>
                 <p>
                     Sistem Named Entity Recognition berbasis BiLSTM dan Naive Bayes
                     untuk mengubah teks jurnal herbal menjadi informasi yang lebih terstruktur.
@@ -55,15 +55,16 @@
 
     <nav class="navbar" aria-label="Navigasi utama">
         <div class="navbar-content">
-            <a class="brand" href="#beranda" aria-label="NER Herbal - kembali ke beranda">
+            <a class="brand" href="{{ url_for('index') }}#beranda" aria-label="NER Herbal - kembali ke beranda">
                 <span class="brand-mark">N</span>
                 <span>NER Herbal</span>
             </a>
 
             <div class="nav-links">
-                <a href="#beranda">Beranda</a>
-                <a href="#tanaman-herbal">Tanaman Herbal</a>
-                <a class="nav-cta" href="#ner">Mulai Analisis</a>
+                <a href="{{ url_for('index') }}#beranda">Beranda</a>
+                <a href="{{ url_for('index') }}#tanaman-herbal">Tanaman Herbal</a>
+                <a href="{{ url_for('about') }}">Tentang</a>
+                <a class="nav-cta" href="{{ url_for('index') }}#ner">Mulai Analisis</a>
             </div>
         </div>
     </nav>

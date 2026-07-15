@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mengenal Named Entity Recognition, tanaman obat keluarga, dan peran keduanya dalam proyek NER Tanaman Herbal.">
+    <title>Tentang NER dan Tanaman TOGA | NER Herbal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="about-page">
+    <a class="skip-link" href="#konten-utama">Lewati ke konten utama</a>
+
+    <header class="about-header">
+        <div class="header-glow header-glow-left" aria-hidden="true"></div>
+        <div class="header-glow header-glow-right" aria-hidden="true"></div>
+
+        <div class="about-header-inner">
+            <div class="about-header-copy">
+                <span class="eyebrow">Tentang NER Herbal</span>
+                <h1>Di balik teks herbal, ada informasi yang perlu <span>diberi nama.</span></h1>
+                <p>
+                    Halaman ini bercerita tentang dua hal yang menjadi dasar proyek:
+                    cara komputer mengenali informasi dalam bahasa manusia dan kedekatan
+                    tanaman obat dengan kehidupan keluarga di Indonesia.
+                </p>
+            </div>
+
+            <div class="about-header-visual" aria-hidden="true">
+                <span class="about-visual-label label-source">Kalimat</span>
+                <span class="about-visual-line line-one"></span>
+                <div class="about-visual-core">
+                    <small>diproses oleh</small>
+                    <strong>NER</strong>
+                </div>
+                <span class="about-visual-line line-two"></span>
+                <div class="about-visual-output">
+                    <span>HERB</span>
+                    <span>DISEASE</span>
+                    <span>COMPOUND</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar" aria-label="Navigasi utama">
+        <div class="navbar-content">
+            <a class="brand" href="{{ url_for('index') }}#beranda" aria-label="NER Herbal - kembali ke beranda">
+                <span class="brand-mark">N</span>
+                <span>NER Herbal</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}#beranda">Beranda</a>
+                <a href="{{ url_for('index') }}#tanaman-herbal">Tanaman Herbal</a>
+                <a class="nav-active" href="{{ url_for('about') }}" aria-current="page">Tentang</a>
+                <a class="nav-cta" href="{{ url_for('index') }}#ner">Mulai Analisis</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="about-container" id="konten-utama">
+        <section class="about-intro" aria-labelledby="judul-ner-about">
+            <div class="about-section-heading">
+                <span class="section-kicker">01 — Mengenal NER</span>
+                <h2 id="judul-ner-about">Komputer tidak sekadar membaca kata, tetapi belajar mengenali perannya.</h2>
+            </div>
+
+            <div class="about-intro-grid">
+                <div class="about-prose">
+                    <p class="lead-paragraph">
+                        Ketika membaca kalimat, kita biasanya langsung tahu bahwa “jahe” adalah
+                        tanaman dan “gingerol” adalah senyawa. Bagi komputer, keduanya mula-mula
+                        hanyalah rangkaian karakter. <strong>Named Entity Recognition (NER)</strong>
+                        membantu komputer memberi identitas pada kata atau frasa berdasarkan
+                        konteks kalimatnya.
+                    </p>
+                    <p>
+                        NER merupakan bagian dari pemrosesan bahasa alami. Tugasnya bukan mencari
+                        satu kata tertentu, melainkan menemukan bagian teks yang memiliki makna
+                        khusus lalu memasukkannya ke kategori yang sesuai. Karena itu, kata yang
+                        sama dapat dibaca berbeda ketika konteksnya berubah.
+                    </p>
+                    <p>
+                        Dalam proyek ini, NER dipakai untuk menelusuri abstrak jurnal tanaman
+                        herbal. Informasi yang semula tersebar di dalam paragraf—seperti nama
+                        tanaman, senyawa, penyakit, efek, metode, dan populasi penelitian—dapat
+                        diringkas menjadi data yang lebih mudah diperiksa.
+                    </p>
+                </div>
+
+                <aside class="sentence-demo" aria-label="Contoh cara NER mengenali entitas">
+                    <div class="demo-topline">
+                        <span>Contoh sederhana</span>
+                        <small>Satu kalimat, empat informasi</small>
+                    </div>
+                    <p class="demo-sentence">
+                        Ekstrak <mark class="demo-herb">jahe</mark> yang mengandung
+                        <mark class="demo-compound">gingerol</mark> diteliti untuk membantu
+                        mengurangi <mark class="demo-disease">mual</mark> pada
+                        <mark class="demo-population">ibu hamil</mark>.
+                    </p>
+                    <div class="demo-legend" aria-label="Kategori entitas pada contoh">
+                        <span><i class="legend-dot dot-herb"></i>Tanaman</span>
+                        <span><i class="legend-dot dot-compound"></i>Senyawa</span>
+                        <span><i class="legend-dot dot-disease"></i>Keluhan</span>
+                        <span><i class="legend-dot dot-population"></i>Populasi</span>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="about-toga" aria-labelledby="judul-toga">
+            <div class="toga-visual" aria-label="Contoh tanaman obat keluarga">
+                <figure class="toga-image toga-image-main">
+                    <img src="{{ url_for('static', filename='images/Jahe.png') }}" alt="Tanaman jahe">
+                    <figcaption>Jahe</figcaption>
+                </figure>
+                <figure class="toga-image toga-image-small toga-image-top">
+                    <img src="{{ url_for('static', filename='images/Kunyit.png') }}" alt="Tanaman kunyit">
+                    <figcaption>Kunyit</figcaption>
+                </figure>
+                <figure class="toga-image toga-image-small toga-image-bottom">
+                    <img src="{{ url_for('static', filename='images/Daun-Sirih.png') }}" alt="Tanaman daun sirih">
+                    <figcaption>Daun sirih</figcaption>
+                </figure>
+            </div>
+
+            <div class="toga-copy">
+                <span class="section-kicker">02 — Tanaman di sekitar kita</span>
+                <h2 id="judul-toga">TOGA bukan sekadar kebun kecil di halaman rumah.</h2>
+                <p class="lead-paragraph">
+                    <strong>Tanaman Obat Keluarga (TOGA)</strong> adalah tanaman yang dipelihara
+                    di lingkungan rumah untuk dimanfaatkan oleh keluarga, terutama sebagai bahan
+                    ramuan tradisional dan pendamping pemeliharaan kesehatan. Bentuknya tidak harus
+                    berupa kebun luas; beberapa pot jahe, kunyit, kencur, atau sirih pun sudah bisa
+                    menjadi awal yang masuk akal.
+                </p>
+                <p>
+                    Nilai TOGA tidak hanya terletak pada hasil panennya. Kegiatan menanam,
+                    mengenali, dan mengolah tanaman juga menjaga pengetahuan keluarga agar tidak
+                    berhenti sebagai cerita dari generasi sebelumnya. Di saat yang sama, keluarga
+                    belajar bahwa setiap tanaman memiliki cara penggunaan dan batasannya sendiri.
+                </p>
+            </div>
+        </section>
+
+        <section class="about-benefits" aria-labelledby="judul-kegunaan">
+            <div class="section-heading about-benefits-heading">
+                <div>
+                    <span class="section-kicker">Kegunaan TOGA</span>
+                    <h2 class="section-title" id="judul-kegunaan">Manfaat yang terasa dekat dengan keseharian</h2>
+                </div>
+                <p class="section-subtitle">
+                    TOGA paling bermanfaat ketika dipahami sebagai kebiasaan merawat pengetahuan
+                    dan lingkungan, bukan sebagai jawaban tunggal untuk semua masalah kesehatan.
+                </p>
+            </div>
+
+            <div class="benefit-grid">
+                <article class="benefit-card">
+                    <span class="benefit-number">01</span>
+                    <h3>Mendekatkan bahan herbal</h3>
+                    <p>
+                        Tanaman yang biasa digunakan keluarga tersedia lebih dekat dan dapat
+                        dipanen seperlunya tanpa selalu bergantung pada produk jadi.
+                    </p>
+                </article>
+
+                <article class="benefit-card">
+                    <span class="benefit-number">02</span>
+                    <h3>Menjadi ruang belajar</h3>
+                    <p>
+                        Anggota keluarga dapat belajar mengenali jenis tanaman, bagian yang
+                        digunakan, cara perawatan, serta alasan suatu tanaman dimanfaatkan.
+                    </p>
+                </article>
+
+                <article class="benefit-card">
+                    <span class="benefit-number">03</span>
+                    <h3>Menjaga pengetahuan lokal</h3>
+                    <p>
+                        Kebiasaan menanam membantu pengetahuan tradisional tetap hidup sambil
+                        membuka ruang untuk memeriksanya melalui informasi ilmiah.
+                    </p>
+                </article>
+
+                <article class="benefit-card">
+                    <span class="benefit-number">04</span>
+                    <h3>Menghidupkan pekarangan</h3>
+                    <p>
+                        TOGA membuat lahan terbatas lebih produktif, menambah keragaman tanaman,
+                        dan dapat dirawat bersama sebagai kegiatan keluarga.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section class="about-connection" aria-labelledby="judul-kaitan">
+            <div class="connection-copy">
+                <span class="section-kicker">03 — Titik temu</span>
+                <h2 id="judul-kaitan">Mengapa NER dan tanaman TOGA dibahas dalam satu proyek?</h2>
+                <p>
+                    Pengetahuan tentang tanaman obat terus bertambah melalui jurnal dan artikel
+                    ilmiah. Masalahnya, informasi penting sering tersembunyi di antara paragraf
+                    yang panjang. Proyek ini mencoba memperpendek jarak antara teks tersebut dan
+                    pembacanya: NER menandai informasi penting, lalu aplikasi menyajikannya kembali
+                    dalam bentuk yang lebih terstruktur.
+                </p>
+                <p>
+                    Sistem tidak memutuskan apakah suatu tanaman terbukti menyembuhkan penyakit.
+                    Perannya lebih sederhana dan terukur: membantu pembaca menemukan apa yang
+                    dibahas dalam teks sehingga penelusuran dapat dilakukan dengan lebih cepat.
+                </p>
+            </div>
+
+            <div class="connection-flow" aria-label="Alur proyek NER Tanaman Herbal">
+                <div class="flow-item">
+                    <span>01</span>
+                    <div>
+                        <strong>Abstrak jurnal</strong>
+                        <small>Teks menjadi sumber informasi</small>
+                    </div>
+                </div>
+                <div class="flow-arrow" aria-hidden="true">↓</div>
+                <div class="flow-item">
+                    <span>02</span>
+                    <div>
+                        <strong>Analisis NER</strong>
+                        <small>Model mengenali entitas dalam konteks</small>
+                    </div>
+                </div>
+                <div class="flow-arrow" aria-hidden="true">↓</div>
+                <div class="flow-item">
+                    <span>03</span>
+                    <div>
+                        <strong>Informasi terstruktur</strong>
+                        <small>Hasil lebih mudah ditelusuri</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="responsible-note" aria-labelledby="judul-catatan">
+            <div class="note-mark" aria-hidden="true">!</div>
+            <div>
+                <span>Catatan penting</span>
+                <h2 id="judul-catatan">Alami tidak selalu berarti aman untuk semua orang.</h2>
+                <p>
+                    Pemanfaatan tanaman obat tetap perlu mempertimbangkan ketepatan jenis tanaman,
+                    bagian yang digunakan, cara pengolahan, jumlah konsumsi, kondisi kesehatan,
+                    serta kemungkinan interaksi dengan obat. Keluhan yang menetap, memburuk, atau
+                    memerlukan penanganan khusus sebaiknya dikonsultasikan kepada tenaga kesehatan.
+                </p>
+            </div>
+        </aside>
+
+        <section class="about-cta" aria-labelledby="judul-cta-about">
+            <div>
+                <span class="section-kicker">Lihat cara kerjanya</span>
+                <h2 id="judul-cta-about">Coba temukan entitas dalam abstrak jurnal herbal.</h2>
+            </div>
+            <a href="{{ url_for('index') }}#ner">
+                <span>Mulai Analisis NER</span>
+                <span aria-hidden="true">→</span>
+            </a>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div>
+                <span class="brand-mark footer-mark">N</span>
+                <strong>NER Herbal</strong>
+            </div>
+            <p>BiLSTM &amp; Naive Bayes untuk identifikasi entitas tanaman herbal.</p>
+            <small>© 2026 Reza Alfiansyah. All rights reserved.</small>
+        </div>
+    </footer>
+</body>
+</html>
