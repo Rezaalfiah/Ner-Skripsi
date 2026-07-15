@@ -1,3 +1,13 @@
+---
+title: NER Tanaman Herbal
+emoji: 🌿
+colorFrom: green
+colorTo: yellow
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Named Entity Recognition pada Tanaman Herbal
 
 Project ini merupakan implementasi **Named Entity Recognition (NER)** pada teks jurnal tanaman herbal menggunakan pendekatan **BIO Tagging**. Sistem ini dibuat untuk mengenali entitas penting dalam abstrak jurnal herbal, seperti nama tanaman, penyakit, anggota tubuh, senyawa, efek, terapi, metode, dan populasi.
@@ -87,8 +97,10 @@ F1-score  : 0.5689
 ## Struktur Folder Project
 
 ```text
-Project/
+Ner-Skripsi/
 ├── app.py
+├── Dockerfile
+├── requirements.txt
 ├── models/
 │   ├── bilstm_ner_weights.weights.h5
 │   ├── naive_bayes_ner_model.pkl
@@ -96,19 +108,16 @@ Project/
 ├── templates/
 │   └── index.html
 ├── static/
-│   └── img/
-│       ├── hero-ner.png
-│       ├── jahe.png
-│       ├── kunyit.png
-│       ├── daun-sirih.png
-│       ├── temulawak.png
-│       ├── lidah-buaya.png
-│       └── sambiloto.png
-├── requirements.txt
+│   ├── style.css
+│   └── images/
+├── Dataset_NER_BIO_Tagging_Final.csv
+├── NER_BiLSTM_NB_FIXED.ipynb
+├── .dockerignore
+├── .gitignore
 └── README.md
 ```
 
-Catatan: folder `static/img/` bersifat opsional. Jika gambar belum tersedia, website tetap dapat berjalan, tetapi tampilan visual tanaman herbal tidak akan muncul.
+Folder `models/`, `templates/`, dan `static/` harus berada sejajar dengan `app.py` agar aplikasi dapat menemukannya saat dijalankan secara lokal maupun melalui Docker.
 
 ---
 
@@ -174,7 +183,7 @@ Keterangan:
 | `naive_bayes_ner_model.pkl`     | Model Naive Bayes                                      |
 | `ner_mappings.pkl`              | Mapping token, label, threshold, dan konfigurasi model |
 
-File model tidak disertakan secara otomatis jika ukurannya besar. Pastikan file model sudah diletakkan di folder `models/` sebelum menjalankan aplikasi.
+Ketiga file model disertakan dalam repository dan harus tetap berada di folder `models/` agar aplikasi dapat dijalankan dan di-deploy.
 
 ---
 
@@ -191,6 +200,28 @@ Setelah server berjalan, buka browser dan akses:
 ```text
 http://127.0.0.1:5000/
 ```
+
+---
+
+## Deployment ke Hugging Face Spaces
+
+Repository ini sudah dikonfigurasi sebagai Docker Space dengan port `7860`.
+
+1. Buat Space baru di Hugging Face.
+2. Pilih **Docker** sebagai SDK dan **CPU Basic** sebagai hardware.
+3. Tambahkan repository Space sebagai remote Git:
+
+```bash
+git remote add hf https://huggingface.co/spaces/USERNAME/ner-skripsi
+```
+
+4. Untuk deployment pertama, kirim branch lokal `master` ke branch `main` milik Space:
+
+```bash
+git push --force hf master:main
+```
+
+Ganti `USERNAME` dengan username Hugging Face. Gunakan Hugging Face Access Token dengan izin tulis ketika Git meminta password. Deployment berikutnya cukup menggunakan `git push hf master:main`.
 
 ---
 

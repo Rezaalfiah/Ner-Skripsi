@@ -57,10 +57,9 @@ Thumbs.db
 # =========================
 # Model training artifacts
 # =========================
-*.pkl
-*.h5
+# File .pkl dan .h5 di models/ dibutuhkan aplikasi saat runtime,
+# sehingga sengaja tidak diabaikan oleh Git.
 *.joblib
 *.pt
 *.pth
 *.onnx
-models/
