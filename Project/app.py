@@ -13,7 +13,11 @@ from markupsafe import escape
 # Flask Config
 # =========================================================
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_folder="static",
+    template_folder="templates",
+)
 app.config["MAX_CONTENT_LENGTH"] = 64 * 1024
 
 MAX_ABSTRACT_CHARS = 10_000

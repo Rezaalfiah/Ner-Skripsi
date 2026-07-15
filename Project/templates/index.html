@@ -1,288 +1,503 @@
 <!DOCTYPE html>
-
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistem identifikasi entitas pada teks jurnal tanaman herbal menggunakan BiLSTM dan Naive Bayes.">
     <title>NER Tanaman Herbal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
+    <a class="skip-link" href="#konten-utama">Lewati ke konten utama</a>
 
+    <header class="header" id="beranda">
+        <div class="header-glow header-glow-left" aria-hidden="true"></div>
+        <div class="header-glow header-glow-right" aria-hidden="true"></div>
 
-<header class="header" id="beranda">
-    <h1>Named Entity Recognition pada Tanaman Herbal</h1>
-    <p>Sistem identifikasi entitas pada teks jurnal herbal menggunakan BiLSTM dan Naive Bayes</p>
-</header>
-
-<nav class="navbar">
-    <div class="navbar-content">
-        <a href="#beranda">Beranda</a>
-        <a href="#tanaman-herbal">Tanaman Herbal</a>
-        <a href="#ner">Named Entity Recognition</a>
-    </div>
-</nav>
-
-<main class="container">
-
-    <section class="section hero">
-        <div>
-            <h2>Analisis Entitas pada Teks Herbal</h2>
-            <p>
-                Website ini digunakan untuk mengenali entitas penting dalam abstrak jurnal
-                yang berkaitan dengan tanaman herbal. Entitas yang dikenali meliputi nama
-                tumbuhan, penyakit, anggota tubuh, senyawa, efek, terapi, metode, dan populasi.
-            </p>
-            <p>
-                Sistem ini menerapkan pendekatan Named Entity Recognition berbasis BIO tagging
-                dengan dua model, yaitu BiLSTM sebagai model utama dan Naive Bayes sebagai model pembanding.
-            </p>
-        </div>
-
-        <div class="hero-box">
-            <strong>Tujuan Sistem</strong>
-            <p>
-                Membantu proses ekstraksi informasi dari teks ilmiah herbal agar entitas penting
-                dapat terlihat lebih jelas dan terstruktur.
-            </p>
-        </div>
-    </section>
-
-    <section class="section" id="tanaman-herbal">
-        <h2 class="section-title">Penjelasan Tanaman Herbal</h2>
-        <p class="section-subtitle">
-            Tanaman herbal merupakan tumbuhan yang secara tradisional banyak digunakan
-            dalam pengobatan, perawatan tubuh, atau penelitian farmakologi. Dalam konteks
-            penelitian ini, tanaman herbal menjadi salah satu entitas penting yang perlu dikenali
-            dari teks jurnal.
-        </p>
-
-        <div class="herbal-grid">
-            <div class="herbal-card">
-                <h3>Jahe</h3>
+        <div class="header-inner">
+            <div class="header-copy">
+                <span class="eyebrow">Natural Language Processing untuk Herbal</span>
+                <h1>Temukan entitas penting dalam teks <span>tanaman herbal.</span></h1>
                 <p>
-                    Jahe sering ditemukan dalam penelitian herbal karena mengandung senyawa
-                    bioaktif seperti gingerol. Dalam teks ilmiah, jahe dapat muncul sebagai
-                    objek penelitian atau bahan terapi herbal.
+                    Sistem Named Entity Recognition berbasis BiLSTM dan Naive Bayes
+                    untuk mengubah teks jurnal herbal menjadi informasi yang lebih terstruktur.
                 </p>
-                <span class="tag">HERB</span>
-            </div>
 
-            <div class="herbal-card">
-                <h3>Kunyit</h3>
-                <p>
-                    Kunyit dikenal memiliki kandungan kurkumin. Pada abstrak jurnal,
-                    kunyit sering dikaitkan dengan efek antiinflamasi, antioksidan,
-                    atau aktivitas farmakologis lainnya.
-                </p>
-                <span class="tag">HERB</span>
-            </div>
-
-            <div class="herbal-card">
-                <h3>Daun Sirih</h3>
-                <p>
-                    Daun sirih banyak digunakan dalam kajian herbal, terutama yang berkaitan
-                    dengan antibakteri, luka, dan kesehatan mulut. Nama ilmiahnya sering
-                    ditulis sebagai Piper betle.
-                </p>
-                <span class="tag">HERB</span>
-            </div>
-
-            <div class="herbal-card">
-                <h3>Temulawak</h3>
-                <p>
-                    Temulawak merupakan tanaman rimpang yang sering dibahas dalam penelitian
-                    terkait senyawa aktif dan efek biologis terhadap tubuh.
-                </p>
-                <span class="tag">HERB</span>
-            </div>
-
-            <div class="herbal-card">
-                <h3>Lidah Buaya</h3>
-                <p>
-                    Lidah buaya atau Aloe vera sering muncul dalam penelitian mengenai
-                    perawatan kulit, penyembuhan luka, dan aktivitas antiinflamasi.
-                </p>
-                <span class="tag">HERB</span>
-            </div>
-
-            <div class="herbal-card">
-                <h3>Sambiloto</h3>
-                <p>
-                    Sambiloto sering dikaji karena kandungan senyawa andrographolide.
-                    Dalam teks jurnal, tanaman ini dapat berhubungan dengan efek imunologi
-                    atau aktivitas antimikroba.
-                </p>
-                <span class="tag">HERB</span>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="ner">
-        <h2 class="section-title">Named Entity Recognition</h2>
-        <p class="section-subtitle">
-            Masukkan informasi jurnal dan abstrak pada form berikut, lalu pilih model
-            yang ingin digunakan untuk melakukan prediksi entitas.
-        </p>
-
-        <div class="ner-card">
-            <form method="POST" action="#ner">
-                <div class="form-grid">
+                <div class="header-highlights" aria-label="Ringkasan sistem">
                     <div>
-                        <label for="judul">Judul Jurnal</label>
-                        <input type="text" id="judul" name="judul" value="{{ judul }}" placeholder="Masukkan judul jurnal">
+                        <strong>8</strong>
+                        <span>Kategori entitas</span>
                     </div>
-
                     <div>
-                        <label for="penulis">Nama Penulis</label>
-                        <input type="text" id="penulis" name="penulis" value="{{ penulis }}" placeholder="Masukkan nama penulis">
+                        <strong>2</strong>
+                        <span>Model prediksi</span>
                     </div>
-
                     <div>
-                        <label for="tahun">Tahun Terbit</label>
-                        <input type="text" id="tahun" name="tahun" value="{{ tahun }}" placeholder="Tahun">
+                        <strong>BIO</strong>
+                        <span>Skema tagging</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-visual" aria-hidden="true">
+                <div class="entity-orbit entity-orbit-one">HERB</div>
+                <div class="entity-orbit entity-orbit-two">COMPOUND</div>
+                <div class="entity-orbit entity-orbit-three">EFFECT</div>
+                <div class="visual-core">
+                    <span class="core-icon">N</span>
+                    <strong>NER</strong>
+                    <!-- <small>Herbal Intelligence</small> -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar" aria-label="Navigasi utama">
+        <div class="navbar-content">
+            <a class="brand" href="#beranda" aria-label="NER Herbal - kembali ke beranda">
+                <span class="brand-mark">N</span>
+                <span>NER Herbal</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#beranda">Beranda</a>
+                <a href="#tanaman-herbal">Tanaman Herbal</a>
+                <a class="nav-cta" href="#ner">Mulai Analisis</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" id="konten-utama">
+        <section class="section hero" aria-labelledby="judul-analisis">
+            <div class="hero-content">
+                <span class="section-kicker">Tentang sistem</span>
+                <h2 id="judul-analisis">Analisis entitas yang membuat teks ilmiah lebih mudah dipahami</h2>
+                <p>
+                    Website ini mengenali informasi penting dalam abstrak jurnal herbal,
+                    mulai dari nama tumbuhan, penyakit, anggota tubuh, senyawa, efek,
+                    terapi, metode, hingga populasi.
+                </p>
+                <p>
+                    Pendekatan Named Entity Recognition menggunakan skema BIO tagging,
+                    dengan BiLSTM sebagai model utama dan Naive Bayes sebagai pembanding.
+                </p>
+            </div>
+
+            <aside class="hero-box" aria-label="Tujuan sistem">
+                <div class="hero-box-icon" aria-hidden="true">01</div>
+                <div>
+                    <span class="hero-box-label">Tujuan sistem</span>
+                    <h3>Ekstraksi informasi yang cepat dan terstruktur</h3>
+                    <p>
+                        Membantu peneliti menemukan entitas penting dari teks ilmiah
+                        tanpa harus menandainya satu per satu.
+                    </p>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section herbal-section" id="tanaman-herbal" aria-labelledby="judul-tanaman">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Wawasan herbal</span>
+                    <h2 class="section-title" id="judul-tanaman">Mengenal tanaman herbal</h2>
+                </div>
+                <p class="section-subtitle">
+                    Tanaman herbal banyak digunakan dalam pengobatan, perawatan tubuh,
+                    dan penelitian farmakologi. Dalam penelitian ini, nama tanaman menjadi
+                    salah satu entitas penting yang dikenali dari teks jurnal.
+                </p>
+            </div>
+
+            <div class="herbal-grid">
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">01</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                        <div class="herbal-image-wrapper">
+                            <img src="{{ url_for('static', filename='images/Jahe.png') }}" alt="Jahe" class="herbal-image">
+                        </div>
+                    <h3>Jahe</h3>
+                    <p>
+                        Kaya akan gingerol dan kerap muncul sebagai objek penelitian
+                        maupun bahan terapi dalam teks ilmiah herbal.
+                    </p>
+                    <span class="latin-name">Zingiber officinale</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">02</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Kunyit.png') }}" alt="Kunyit" class="herbal-image">
+                    </div>
+                    <h3>Kunyit</h3>
+                    <p>
+                        Dikenal dengan kandungan kurkumin serta aktivitas antiinflamasi,
+                        antioksidan, dan farmakologis lainnya.
+                    </p>
+                    <span class="latin-name">Curcuma longa</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">03</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Daun-Sirih.png') }}" alt="Daun Sirih" class="herbal-image">
+                    </div>
+                    <h3>Daun Sirih</h3>
+                    <p>
+                        Banyak dikaji terkait aktivitas antibakteri, penyembuhan luka,
+                        dan pemeliharaan kesehatan mulut.
+                    </p>
+                    <span class="latin-name">Piper betle</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">04</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Temulawak.png') }}" alt="Temulawak" class="herbal-image">
+                    </div>
+                    <h3>Temulawak</h3>
+                    <p>
+                        Tanaman rimpang yang sering dibahas dalam penelitian senyawa aktif
+                        dan efek biologisnya terhadap tubuh.
+                    </p>
+                    <span class="latin-name">Curcuma xanthorrhiza</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">05</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Kumis-Kucing.jpg') }}" alt="Kumis Kucing" class="herbal-image">
+                    </div>
+                    <h3>Kumis Kucing</h3>
+                    <p>
+                        Banyak dikaji karena aktivitas diuretik, antiinflamasi, dan potensinya
+                        dalam membantu menjaga kesehatan ginjal serta saluran kemih.
+                    </p>
+                    <span class="latin-name">Orthosiphon aristatus</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">06</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Sambiloto.png') }}" alt="Sambiloto" class="herbal-image">
+                    </div>
+                    <h3>Sambiloto</h3>
+                    <p>
+                        Banyak dikaji karena kandungan andrographolide serta aktivitas
+                        antiinflamasi, antioksidan, dan potensinya dalam mendukung sistem imun.
+                    </p>
+                    <span class="latin-name">Andrographis paniculata</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">07</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Mengkudu.png') }}" alt="Mengkudu" class="herbal-image">
+                    </div>
+                    <h3>Mengkudu</h3>
+                    <p>
+                        Sering diteliti karena kandungan senyawa bioaktif serta aktivitas
+                        antioksidan, antimikroba, dan potensinya dalam menjaga kesehatan tubuh.
+                    </p>
+                    <span class="latin-name">Morinda citrifolia</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">08</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Lengkuas.png') }}" alt="Lengkuas" class="herbal-image">
+                    </div>
+                    <h3>Lengkuas</h3>
+                    <p>
+                        Banyak dibahas karena kandungan senyawa fenolik serta aktivitas
+                        antimikroba, antioksidan, dan antiinflamasi yang dimilikinya.
+                    </p>
+                    <span class="latin-name">Alpinia galanga</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">09</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Pegagan.png') }}" alt="Pegagan" class="herbal-image">
+                    </div>
+                    <h3>Pegagan</h3>
+                    <p>
+                        Kerap dikaji terkait kandungan triterpenoid serta potensinya dalam
+                        membantu penyembuhan luka, menjaga kesehatan kulit, dan fungsi kognitif.
+                    </p>
+                    <span class="latin-name">Centella asiatica (L.) Urban</span>
+                </article>
+
+                <article class="herbal-card">
+                    <div class="card-topline">
+                        <span class="card-number">10</span>
+                        <span class="tag">HERB</span>
+                    </div>
+                    <div class="herbal-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/Kelor.png') }}" alt="Kelor" class="herbal-image">
+                    </div>
+                    <h3>Kelor</h3>
+                    <p>
+                        Banyak diteliti karena kaya akan vitamin, mineral, dan senyawa
+                        antioksidan serta potensinya sebagai sumber nutrisi dan bahan herbal.
+                    </p>
+                    <span class="latin-name">Piper betle L.</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="section ner-section" id="ner" aria-labelledby="judul-ner">
+            <div class="section-heading ner-heading">
+                <div>
+                    <span class="section-kicker">Ruang analisis</span>
+                    <h2 class="section-title" id="judul-ner">Named Entity Recognition</h2>
+                </div>
+                <p class="section-subtitle">
+                    Lengkapi informasi jurnal, masukkan abstrak, lalu pilih model untuk
+                    memulai proses identifikasi entitas.
+                </p>
+            </div>
+
+            <div class="ner-card">
+                <div class="form-intro">
+                    <div class="step-badge">01</div>
+                    <div>
+                        <span>Data masukan</span>
+                        <h3>Informasi jurnal dan abstrak</h3>
                     </div>
                 </div>
 
-                <label for="abstrak">Abstrak</label>
-                <textarea id="abstrak" name="abstrak" placeholder="Masukkan abstrak jurnal di sini">{{ input_text }}</textarea>
+                <form method="POST" action="#ner">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label for="judul">Judul Jurnal</label>
+                            <input type="text" id="judul" name="judul" value="{{ judul }}" placeholder="Contoh: Aktivitas ekstrak jahe" autocomplete="off">
+                        </div>
 
-                <div class="radio-group">
-                    <strong>Pilih Model:</strong><br><br>
+                        <div class="field-group">
+                            <label for="penulis">Nama Penulis</label>
+                            <input type="text" id="penulis" name="penulis" value="{{ penulis }}" placeholder="Nama penulis jurnal" autocomplete="name">
+                        </div>
 
-                    <label>
-                        <input type="radio" name="model" value="bilstm"
-                               {% if model_choice == "bilstm" %}checked{% endif %}>
-                        BiLSTM
-                    </label>
-
-                    <label>
-                        <input type="radio" name="model" value="naive_bayes"
-                               {% if model_choice == "naive_bayes" %}checked{% endif %}>
-                        Naive Bayes
-                    </label>
-                </div>
-
-                <button type="submit" class="button-submit">Proses NER</button>
-            </form>
-
-            {% if output_text %}
-                <div class="result-section">
-                    <h2>{{ model_output_title }}</h2>
-
-                    <div class="model-info">
-                        <strong>Model yang dipilih:</strong> {{ model_name }}<br>
-                        <strong>Keterangan:</strong> {{ model_description }}<br>
-
-                        <span class="model-badge">{{ model_role }}</span>
-                        <span class="model-badge">{{ model_score }}</span>
+                        <div class="field-group">
+                            <label for="tahun">Tahun Terbit</label>
+                            <input type="text" id="tahun" name="tahun" value="{{ tahun }}" placeholder="2026" inputmode="numeric" maxlength="4" autocomplete="off">
+                        </div>
                     </div>
 
-                    <h3>Legenda Entitas</h3>
-                    <div class="legend">
-                        <span class="highlight-HERB">HERB</span>
-                        <span class="highlight-BODY_PART">BODY_PART</span>
-                        <span class="highlight-DISEASE">DISEASE</span>
-                        <span class="highlight-COMPOUND">COMPOUND</span>
-                        <span class="highlight-EFFECT">EFFECT</span>
-                        <span class="highlight-TREATMENT">TREATMENT</span>
-                        <span class="highlight-METHOD">METHOD</span>
-                        <span class="highlight-POPULATION">POPULATION</span>
+                    <div class="field-group abstract-field">
+                        <div class="label-row">
+                            <label for="abstrak">Abstrak</label>
+                            <span>Maks. 10.000 karakter</span>
+                        </div>
+                        <textarea id="abstrak" name="abstrak" placeholder="Tempel atau tuliskan abstrak jurnal di sini...">{{ input_text }}</textarea>
                     </div>
 
-                    <div class="output-box">
-                        {{ output_text|safe }}
-                    </div>
+                    <fieldset class="model-fieldset">
+                        <legend>Pilih model analisis</legend>
+                        <div class="model-options">
+                            <label class="model-option">
+                                <input type="radio" name="model" value="bilstm"
+                                       {% if model_choice == "bilstm" %}checked{% endif %}>
+                                <span class="radio-indicator" aria-hidden="true"></span>
+                                <span class="model-option-copy">
+                                    <span class="model-option-top">
+                                        <strong>BiLSTM</strong>
+                                        <small>Utama</small>
+                                    </span>
+                                    <span>Membaca konteks dari urutan token sebelum dan sesudahnya.</span>
+                                </span>
+                            </label>
 
-                    <h3>Tabel Klasifikasi</h3>
-                    <table>
-                        <tr>
-                            <th>Tumbuhan (HERB)</th>
-                            <th>Anggota Tubuh (BODY_PART)</th>
-                            <th>Penyakit (DISEASE)</th>
-                        </tr>
-                        <tr>
-                            <td>{% if herbs %}{{ herbs }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
-                            <td>{% if body_parts %}{{ body_parts }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
-                            <td>{% if diseases %}{{ diseases }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
-                        </tr>
+                            <label class="model-option">
+                                <input type="radio" name="model" value="naive_bayes"
+                                       {% if model_choice == "naive_bayes" %}checked{% endif %}>
+                                <span class="radio-indicator" aria-hidden="true"></span>
+                                <span class="model-option-copy">
+                                    <span class="model-option-top">
+                                        <strong>Naive Bayes</strong>
+                                        <small>Pembanding</small>
+                                    </span>
+                                    <span>Mengklasifikasikan entitas berdasarkan fitur pada setiap token.</span>
+                                </span>
+                            </label>
+                        </div>
+                    </fieldset>
 
-                        <tr>
-                            <th>Senyawa (COMPOUND)</th>
-                            <th>Efek (EFFECT)</th>
-                            <th>Terapi (TREATMENT)</th>
-                        </tr>
-                        <tr>
-                            <td>{% if compounds %}{{ compounds }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
-                            <td>{% if effects %}{{ effects }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
-                            <td>{% if treatments %}{{ treatments }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
-                        </tr>
+                    <button type="submit" class="button-submit">
+                        <span>Proses Analisis NER</span>
+                        <span class="button-arrow" aria-hidden="true">→</span>
+                    </button>
+                </form>
 
-                        <tr>
-                            <th>Metode (METHOD)</th>
-                            <th>Populasi (POPULATION)</th>
-                            <th>Model</th>
-                        </tr>
-                        <tr>
-                            <td>{% if methods %}{{ methods }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
-                            <td>{% if populations %}{{ populations }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
-                            <td>{{ model_name }}</td>
-                        </tr>
-                    </table>
+                {% if output_text %}
+                    <section class="result-section" aria-labelledby="judul-hasil">
+                        <div class="result-heading">
+                            <div>
+                                <span class="section-kicker">Hasil analisis</span>
+                                <h2 id="judul-hasil">{{ model_output_title }}</h2>
+                            </div>
+                            <span class="result-status">Analisis selesai</span>
+                        </div>
 
-                    <h3>Detail Entitas Terdeteksi</h3>
-                    <table>
-                        <tr>
-                            <th>No</th>
-                            <th>Entitas</th>
-                            <th>Label</th>
-                        </tr>
+                        <div class="model-info">
+                            <div class="model-info-icon" aria-hidden="true">02</div>
+                            <div>
+                                <strong>{{ model_name }}</strong>
+                                <p>{{ model_description }}</p>
+                                <span class="model-badge">{{ model_role }}</span>
+                                <span class="model-badge">{{ model_score }}</span>
+                            </div>
+                        </div>
 
-                        {% if entities %}
-                            {% for item in entities %}
-                                <tr>
-                                    <td>{{ loop.index }}</td>
-                                    <td>{{ item.entity }}</td>
-                                    <td>{{ item.label }}</td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr>
-                                <td colspan="3" class="empty-value">Tidak ada entitas yang terdeteksi</td>
-                            </tr>
-                        {% endif %}
-                    </table>
+                        <div class="result-block">
+                            <h3>Legenda Entitas</h3>
+                            <div class="legend">
+                                <span class="highlight-HERB">HERB</span>
+                                <span class="highlight-BODY_PART">BODY_PART</span>
+                                <span class="highlight-DISEASE">DISEASE</span>
+                                <span class="highlight-COMPOUND">COMPOUND</span>
+                                <span class="highlight-EFFECT">EFFECT</span>
+                                <span class="highlight-TREATMENT">TREATMENT</span>
+                                <span class="highlight-METHOD">METHOD</span>
+                                <span class="highlight-POPULATION">POPULATION</span>
+                            </div>
+                        </div>
 
-                    <h3>Informasi Jurnal</h3>
-                    <table>
-                        <tr>
-                            <th>Judul Jurnal</th>
-                            <td>{% if judul %}{{ judul }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
-                        </tr>
-                        <tr>
-                            <th>Nama Penulis</th>
-                            <td>{% if penulis %}{{ penulis }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
-                        </tr>
-                        <tr>
-                            <th>Tahun Terbit</th>
-                            <td>{% if tahun %}{{ tahun }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
-                        </tr>
-                        <tr>
-                            <th>Waktu Proses</th>
-                            <td>{{ timestamp }}</td>
-                        </tr>
-                    </table>
-                </div>
-            {% endif %}
+                        <div class="output-box">
+                            {{ output_text|safe }}
+                        </div>
+
+                        <div class="result-block">
+                            <h3>Tabel Klasifikasi</h3>
+                            <div class="table-scroll" tabindex="0" role="region" aria-label="Tabel klasifikasi entitas">
+                                <table>
+                                    <tr>
+                                        <th>Tumbuhan (HERB)</th>
+                                        <th>Anggota Tubuh (BODY_PART)</th>
+                                        <th>Penyakit (DISEASE)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{% if herbs %}{{ herbs }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if body_parts %}{{ body_parts }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if diseases %}{{ diseases }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Senyawa (COMPOUND)</th>
+                                        <th>Efek (EFFECT)</th>
+                                        <th>Terapi (TREATMENT)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{% if compounds %}{{ compounds }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if effects %}{{ effects }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if treatments %}{{ treatments }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Metode (METHOD)</th>
+                                        <th>Populasi (POPULATION)</th>
+                                        <th>Model</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{% if methods %}{{ methods }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if populations %}{{ populations }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{{ model_name }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="result-block">
+                            <h3>Detail Entitas Terdeteksi</h3>
+                            <div class="table-scroll" tabindex="0" role="region" aria-label="Detail entitas terdeteksi">
+                                <table>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Entitas</th>
+                                        <th>Label</th>
+                                    </tr>
+
+                                    {% if entities %}
+                                        {% for item in entities %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ item.entity }}</td>
+                                                <td><span class="entity-label">{{ item.label }}</span></td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3" class="empty-value">Tidak ada entitas yang terdeteksi</td>
+                                        </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="result-block">
+                            <h3>Informasi Jurnal</h3>
+                            <div class="table-scroll" tabindex="0" role="region" aria-label="Informasi jurnal">
+                                <table class="journal-table">
+                                    <tr>
+                                        <th>Judul Jurnal</th>
+                                        <td>{% if judul %}{{ judul }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nama Penulis</th>
+                                        <td>{% if penulis %}{{ penulis }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Tahun Terbit</th>
+                                        <td>{% if tahun %}{{ tahun }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Waktu Proses</th>
+                                        <td>{{ timestamp }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div>
+                <span class="brand-mark footer-mark">N</span>
+                <strong>NER Herbal</strong>
+            </div>
+            <p>BiLSTM &amp; Naive Bayes untuk identifikasi entitas tanaman herbal.</p>
+            <small>© 2026 Reza Alfiansyah. All rights reserved.</small>
         </div>
-    </section>
-
-</main>
-
-<footer class="footer">
-    Named Entity Recognition pada Tanaman Herbal | BiLSTM dan Naive Bayes | Copyright © 2026 Reza Alfiansyah. All rights reserved.
-</footer>
-
-
+    </footer>
 </body>
 </html>
