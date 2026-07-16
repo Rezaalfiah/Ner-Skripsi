@@ -25,6 +25,65 @@ MAX_TOKENS = 1_000
 
 
 # =========================================================
+# Form Validation Rules
+# =========================================================
+
+TITLE_ALLOWED_SYMBOLS = set(" .,;:!?()[]'’\"&/+-–—%")
+AUTHOR_ALLOWED_SYMBOLS = set(" .,'’-–")
+
+
+def contains_only_letters_and_symbols(value, allowed_symbols):
+    return all(char.isalpha() or char in allowed_symbols for char in value)
+
+
+def validate_analysis_form(judul, penulis, tahun, abstrak):
+    errors = {}
+
+    if not judul:
+        errors["judul"] = "Judul jurnal wajib diisi."
+    elif len(judul) < 3:
+        errors["judul"] = "Judul jurnal minimal terdiri dari 3 karakter."
+    elif len(judul) > 300:
+        errors["judul"] = "Judul jurnal tidak boleh lebih dari 300 karakter."
+    elif not contains_only_letters_and_symbols(judul, TITLE_ALLOWED_SYMBOLS):
+        errors["judul"] = (
+            "Judul hanya boleh berisi huruf dan tanda baca yang umum digunakan pada judul."
+        )
+
+    if not penulis:
+        errors["penulis"] = "Nama penulis wajib diisi."
+    elif len(penulis) < 2:
+        errors["penulis"] = "Nama penulis minimal terdiri dari 2 karakter."
+    elif len(penulis) > 200:
+        errors["penulis"] = "Nama penulis tidak boleh lebih dari 200 karakter."
+    elif not contains_only_letters_and_symbols(penulis, AUTHOR_ALLOWED_SYMBOLS):
+        errors["penulis"] = (
+            "Nama penulis hanya boleh berisi huruf, spasi, koma, titik, apostrof, "
+            "tanda hubung, dan kata ‘dan’."
+        )
+
+    current_year = datetime.now().year
+    if not tahun:
+        errors["tahun"] = "Tahun terbit wajib diisi."
+    elif not tahun.isdigit():
+        errors["tahun"] = "Tahun terbit hanya boleh menggunakan angka."
+    elif len(tahun) != 4:
+        errors["tahun"] = "Tahun terbit harus terdiri dari 4 angka."
+    elif not 1000 <= int(tahun) <= current_year:
+        errors["tahun"] = f"Tahun terbit harus berada antara 1000 dan {current_year}."
+
+    if not abstrak:
+        errors["abstrak"] = "Abstrak jurnal wajib diisi."
+    elif len(abstrak) > MAX_ABSTRACT_CHARS:
+        errors["abstrak"] = (
+            f"Abstrak tidak boleh lebih dari {MAX_ABSTRACT_CHARS:,} karakter."
+            .replace(",", ".")
+        )
+
+    return errors
+
+
+# =========================================================
 # Model Paths
 # =========================================================
 
@@ -518,12 +577,21 @@ def generate_output(predicted):
 
 @app.route("/about")
 def about():
+    # Halaman informasi proyek, dataset, model, dan ruang lingkup penelitian.
     return render_template("about.html")
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
+    # Beranda hanya menampilkan pengantar proyek dan tidak menjalankan prediksi.
+    return render_template("index.html")
+
+
+@app.route("/analyze", methods=["GET", "POST"])
+def analyze():
+    # Nilai awal dipakai saat halaman pertama kali dibuka melalui request GET.
     input_text = ""
+    form_errors = {}
 
     result = {
         "output_text": "",
@@ -546,26 +614,31 @@ def index():
     timestamp = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
     if request.method == "POST":
-        input_text = request.form.get("abstrak", "")[:MAX_ABSTRACT_CHARS]
+        # Ambil dan rapikan seluruh nilai dari form sebelum divalidasi.
+        input_text = request.form.get("abstrak", "").strip()
         raw_model_choice = request.form.get("model", "bilstm")
 
-        judul = request.form.get("judul", "")
-        penulis = request.form.get("penulis", "")
-        tahun = request.form.get("tahun", "")
+        judul = request.form.get("judul", "").strip()
+        penulis = request.form.get("penulis", "").strip()
+        tahun = request.form.get("tahun", "").strip()
 
-        if raw_model_choice in {"bilstm", "lstm"}:
+        form_errors = validate_analysis_form(judul, penulis, tahun, input_text)
+
+        # Prediksi hanya dijalankan jika seluruh kolom lolos validasi.
+        if not form_errors and raw_model_choice in {"bilstm", "lstm"}:
             model_choice = "bilstm"
             predicted = predict_bilstm(input_text)
 
-        elif raw_model_choice in {"naive_bayes", "nb"}:
+        elif not form_errors and raw_model_choice in {"naive_bayes", "nb"}:
             model_choice = "naive_bayes"
             predicted = predict_nb(input_text)
 
-        else:
+        elif not form_errors:
             model_choice = "bilstm"
             predicted = []
 
-        result = generate_output(predicted)
+        if not form_errors:
+            result = generate_output(predicted)
 
     model_name = MODEL_INFO[model_choice]["name"]
     model_output_title = MODEL_INFO[model_choice]["output_title"]
@@ -573,8 +646,9 @@ def index():
     model_role = MODEL_INFO[model_choice]["role"]
     model_score = MODEL_INFO[model_choice]["score"]
 
+    # Seluruh nilai form, hasil prediksi, dan error dikirim dalam satu context.
     return render_template(
-        "index.html",
+        "analyze.html",
         input_text=input_text,
         output_text=result["output_text"],
         herbs=result["herbs"],
@@ -597,6 +671,8 @@ def index():
         model_role=model_role,
         model_score=model_score,
         best_threshold=BEST_THRESHOLD,
+        form_errors=form_errors,
+        current_year=datetime.now().year,
     )
 
 

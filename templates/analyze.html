@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Analisis entitas pada abstrak jurnal tanaman herbal menggunakan model BiLSTM atau Naive Bayes.">
+    <title>Mulai Analisis | NER Herbal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="analysis-page">
+    <a class="skip-link" href="#konten-utama">Lewati ke konten utama</a>
+
+    <!-- HERO ANALISIS: petunjuk awal sebelum pengguna mengisi form -->
+    <header class="analysis-header">
+        <div class="header-glow header-glow-left" aria-hidden="true"></div>
+        <div class="header-glow header-glow-right" aria-hidden="true"></div>
+        <div class="analysis-header-inner">
+            <div>
+                <span class="eyebrow">Ruang Analisis</span>
+                <h1>Tempel abstraknya, lalu lihat informasi apa yang <span>ditemukan model.</span></h1>
+                <p>
+                    Anda tidak perlu mengubah susunan kalimat atau menandai istilah lebih dulu.
+                    Masukkan teks seperti aslinya, pilih model, kemudian periksa hasilnya dengan
+                    tetap merujuk pada konteks jurnal.
+                </p>
+            </div>
+
+            <aside class="analysis-header-note" aria-label="Informasi singkat analisis">
+                <span>Yang perlu disiapkan</span>
+                <strong>Satu abstrak jurnal</strong>
+                <p>Siapkan juga judul, nama penulis, dan tahun terbit karena seluruh kolom wajib diisi.</p>
+            </aside>
+        </div>
+    </header>
+
+    <!-- NAVIGASI UTAMA -->
+    <nav class="navbar" aria-label="Navigasi utama">
+        <div class="navbar-content">
+            <a class="brand" href="{{ url_for('index') }}#beranda" aria-label="NER Herbal - kembali ke beranda">
+                <span class="brand-mark">N</span>
+                <span>NER Herbal</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}#beranda">Beranda</a>
+                <a href="{{ url_for('about') }}">Tentang</a>
+                <a class="nav-cta nav-cta-active" href="{{ url_for('analyze') }}" aria-current="page">Mulai Analisis</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA ANALISIS -->
+    <main class="container analysis-container" id="konten-utama">
+        <!-- FORM ANALISIS DAN HASIL PREDIKSI -->
+        <section class="section ner-section" id="ner" aria-labelledby="judul-ner">
+            <div class="section-heading ner-heading">
+                <div>
+                    <span class="section-kicker">Masukkan teks</span>
+                    <h2 class="section-title" id="judul-ner">Analisis abstrak jurnal</h2>
+                </div>
+                <p class="section-subtitle">
+                    Seluruh kolom wajib diisi sesuai format. Model hanya menganalisis teks abstrak,
+                    sedangkan informasi lainnya ditampilkan sebagai identitas jurnal.
+                </p>
+            </div>
+
+            <div class="ner-card">
+                <!-- IDENTITAS BAGIAN FORM -->
+                <div class="form-intro">
+                    <div class="step-badge">01</div>
+                    <div>
+                        <span>Data masukan</span>
+                        <h3>Informasi jurnal dan abstrak</h3>
+                    </div>
+                </div>
+
+                <!-- ATURAN FORMAT SETIAP KOLOM -->
+                <aside class="form-rules" aria-labelledby="judul-aturan-form">
+                    <div class="form-rules-mark" aria-hidden="true">i</div>
+                    <div>
+                        <h3 id="judul-aturan-form">Aturan pengisian</h3>
+                        <ul>
+                            <li>Semua kolom wajib diisi.</li>
+                            <li>Judul menggunakan huruf dan tanda baca yang memang terdapat pada judul.</li>
+                            <li>Nama penulis menggunakan huruf; pemisah seperti koma, kata “dan”, titik, apostrof, atau tanda hubung diperbolehkan.</li>
+                            <li>Tahun terbit ditulis dengan 4 angka dan tidak boleh melebihi tahun {{ current_year }}.</li>
+                            <li>Abstrak dapat memuat maksimal 10.000 karakter.</li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- RINGKASAN ERROR SERVER-SIDE -->
+                {% if form_errors %}
+                    <div class="form-error-summary" role="alert" aria-labelledby="judul-error-form">
+                        <strong id="judul-error-form">Formulir belum dapat diproses</strong>
+                        <p>Periksa kembali kolom yang ditandai di bawah ini.</p>
+                    </div>
+                {% endif %}
+
+                <!-- INPUT JURNAL, ABSTRAK, DAN PILIHAN MODEL -->
+                <form method="POST" action="{{ url_for('analyze') }}#ner">
+                    <div class="form-grid">
+                        <div class="field-group{% if form_errors.judul %} field-has-error{% endif %}">
+                            <label for="judul">Judul Jurnal <span class="required-mark" aria-hidden="true">*</span></label>
+                            <input type="text" id="judul" name="judul" value="{{ judul }}"
+                                   placeholder="Contoh: Aktivitas ekstrak jahe"
+                                   autocomplete="off" required minlength="3" maxlength="300"
+                                   pattern="[A-Za-zÀ-ÖØ-öø-ÿ .,;:!?()'’&amp;/+%–—\-]+"
+                                   title="Gunakan huruf dan tanda baca yang umum digunakan pada judul."
+                                   aria-invalid="{{ 'true' if form_errors.judul else 'false' }}"
+                                   aria-describedby="judul-hint{% if form_errors.judul %} judul-error{% endif %}">
+                            <small class="field-hint" id="judul-hint">Huruf dan tanda baca umum; maksimal 300 karakter.</small>
+                            {% if form_errors.judul %}<small class="field-error" id="judul-error">{{ form_errors.judul }}</small>{% endif %}
+                        </div>
+
+                        <div class="field-group{% if form_errors.penulis %} field-has-error{% endif %}">
+                            <label for="penulis">Nama Penulis <span class="required-mark" aria-hidden="true">*</span></label>
+                            <input type="text" id="penulis" name="penulis" value="{{ penulis }}"
+                                   placeholder="Contoh: Reza Alfiansyah, dan S. Putra"
+                                   autocomplete="name" required minlength="2" maxlength="200"
+                                   pattern="[A-Za-zÀ-ÖØ-öø-ÿ .,'’–—\-]+"
+                                   title="Gunakan huruf, spasi, koma, kata dan, titik, apostrof, atau tanda hubung."
+                                   aria-invalid="{{ 'true' if form_errors.penulis else 'false' }}"
+                                   aria-describedby="penulis-hint{% if form_errors.penulis %} penulis-error{% endif %}">
+                            <small class="field-hint" id="penulis-hint">Angka tidak diperbolehkan pada nama penulis.</small>
+                            {% if form_errors.penulis %}<small class="field-error" id="penulis-error">{{ form_errors.penulis }}</small>{% endif %}
+                        </div>
+
+                        <div class="field-group{% if form_errors.tahun %} field-has-error{% endif %}">
+                            <label for="tahun">Tahun Terbit <span class="required-mark" aria-hidden="true">*</span></label>
+                            <input type="text" id="tahun" name="tahun" value="{{ tahun }}"
+                                   placeholder="{{ current_year }}" inputmode="numeric"
+                                   autocomplete="off" required minlength="4" maxlength="4"
+                                   pattern="[0-9]{4}" title="Masukkan tahun terbit menggunakan 4 angka."
+                                   aria-invalid="{{ 'true' if form_errors.tahun else 'false' }}"
+                                   aria-describedby="tahun-hint{% if form_errors.tahun %} tahun-error{% endif %}">
+                            <small class="field-hint" id="tahun-hint">Empat angka, maksimal tahun {{ current_year }}.</small>
+                            {% if form_errors.tahun %}<small class="field-error" id="tahun-error">{{ form_errors.tahun }}</small>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="field-group abstract-field{% if form_errors.abstrak %} field-has-error{% endif %}">
+                        <div class="label-row">
+                            <label for="abstrak">Abstrak <span class="required-mark" aria-hidden="true">*</span></label>
+                            <span>Maks. 10.000 karakter</span>
+                        </div>
+                        <textarea id="abstrak" name="abstrak" required maxlength="10000"
+                                  placeholder="Tempel atau tuliskan abstrak jurnal di sini..."
+                                  aria-invalid="{{ 'true' if form_errors.abstrak else 'false' }}"
+                                  {% if form_errors.abstrak %}aria-describedby="abstrak-error"{% endif %}>{{ input_text }}</textarea>
+                        {% if form_errors.abstrak %}<small class="field-error" id="abstrak-error">{{ form_errors.abstrak }}</small>{% endif %}
+                    </div>
+
+                    <fieldset class="model-fieldset">
+                        <legend>Pilih model analisis</legend>
+                        <div class="model-options">
+                            <label class="model-option">
+                                <input type="radio" name="model" value="bilstm"
+                                       required {% if model_choice == "bilstm" %}checked{% endif %}>
+                                <span class="radio-indicator" aria-hidden="true"></span>
+                                <span class="model-option-copy">
+                                    <span class="model-option-top">
+                                        <strong>BiLSTM</strong>
+                                        <small>Utama</small>
+                                    </span>
+                                    <span>Membaca konteks dari urutan token sebelum dan sesudahnya.</span>
+                                </span>
+                            </label>
+
+                            <label class="model-option">
+                                <input type="radio" name="model" value="naive_bayes"
+                                       {% if model_choice == "naive_bayes" %}checked{% endif %}>
+                                <span class="radio-indicator" aria-hidden="true"></span>
+                                <span class="model-option-copy">
+                                    <span class="model-option-top">
+                                        <strong>Naive Bayes</strong>
+                                        <small>Pembanding</small>
+                                    </span>
+                                    <span>Mengklasifikasikan entitas berdasarkan fitur pada setiap token.</span>
+                                </span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="button-submit">
+                        <span>Proses Analisis NER</span>
+                        <span class="button-arrow" aria-hidden="true">→</span>
+                    </button>
+                </form>
+
+                <!-- HASIL HANYA DIRENDER SETELAH PREDIKSI BERHASIL -->
+                {% if output_text %}
+                    <section class="result-section" aria-labelledby="judul-hasil">
+                        <!-- RINGKASAN MODEL YANG DIGUNAKAN -->
+                        <div class="result-heading">
+                            <div>
+                                <span class="section-kicker">Hasil analisis</span>
+                                <h2 id="judul-hasil">{{ model_output_title }}</h2>
+                            </div>
+                            <span class="result-status">Analisis selesai</span>
+                        </div>
+
+                        <div class="model-info">
+                            <div class="model-info-icon" aria-hidden="true">02</div>
+                            <div>
+                                <strong>{{ model_name }}</strong>
+                                <p>{{ model_description }}</p>
+                                <span class="model-badge">{{ model_role }}</span>
+                                <span class="model-badge">{{ model_score }}</span>
+                            </div>
+                        </div>
+
+                        <!-- LEGENDA WARNA ENTITAS -->
+                        <div class="result-block">
+                            <h3>Legenda Entitas</h3>
+                            <div class="legend">
+                                <span class="highlight-HERB">HERB</span>
+                                <span class="highlight-BODY_PART">BODY_PART</span>
+                                <span class="highlight-DISEASE">DISEASE</span>
+                                <span class="highlight-COMPOUND">COMPOUND</span>
+                                <span class="highlight-EFFECT">EFFECT</span>
+                                <span class="highlight-TREATMENT">TREATMENT</span>
+                                <span class="highlight-METHOD">METHOD</span>
+                                <span class="highlight-POPULATION">POPULATION</span>
+                            </div>
+                        </div>
+
+                        <div class="output-box">
+                            {{ output_text|safe }}
+                        </div>
+
+                        <!-- TABEL RINGKASAN PER KATEGORI -->
+                        <div class="result-block">
+                            <h3>Tabel Klasifikasi</h3>
+                            <div class="table-scroll" tabindex="0" role="region" aria-label="Tabel klasifikasi entitas">
+                                <table>
+                                    <tr>
+                                        <th>Tumbuhan (HERB)</th>
+                                        <th>Anggota Tubuh (BODY_PART)</th>
+                                        <th>Penyakit (DISEASE)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{% if herbs %}{{ herbs }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if body_parts %}{{ body_parts }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if diseases %}{{ diseases }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Senyawa (COMPOUND)</th>
+                                        <th>Efek (EFFECT)</th>
+                                        <th>Terapi (TREATMENT)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{% if compounds %}{{ compounds }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if effects %}{{ effects }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if treatments %}{{ treatments }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Metode (METHOD)</th>
+                                        <th>Populasi (POPULATION)</th>
+                                        <th>Model</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{% if methods %}{{ methods }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{% if populations %}{{ populations }}{% else %}<span class="empty-value">Tidak terdeteksi</span>{% endif %}</td>
+                                        <td>{{ model_name }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- DAFTAR SETIAP ENTITAS YANG DITEMUKAN -->
+                        <div class="result-block">
+                            <h3>Detail Entitas Terdeteksi</h3>
+                            <div class="table-scroll" tabindex="0" role="region" aria-label="Detail entitas terdeteksi">
+                                <table>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Entitas</th>
+                                        <th>Label</th>
+                                    </tr>
+
+                                    {% if entities %}
+                                        {% for item in entities %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ item.entity }}</td>
+                                                <td><span class="entity-label">{{ item.label }}</span></td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3" class="empty-value">Tidak ada entitas yang terdeteksi</td>
+                                        </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- IDENTITAS JURNAL DARI INPUT PENGGUNA -->
+                        <div class="result-block">
+                            <h3>Informasi Jurnal</h3>
+                            <div class="table-scroll" tabindex="0" role="region" aria-label="Informasi jurnal">
+                                <table class="journal-table">
+                                    <tr>
+                                        <th>Judul Jurnal</th>
+                                        <td>{% if judul %}{{ judul }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nama Penulis</th>
+                                        <td>{% if penulis %}{{ penulis }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Tahun Terbit</th>
+                                        <td>{% if tahun %}{{ tahun }}{% else %}<span class="empty-value">Tidak diisi</span>{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Waktu Proses</th>
+                                        <td>{{ timestamp }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div>
+                <span class="brand-mark footer-mark">N</span>
+                <strong>NER Herbal</strong>
+            </div>
+            <p>BiLSTM &amp; Naive Bayes untuk identifikasi entitas tanaman herbal.</p>
+            <small>© 2026 Reza Alfiansyah. All rights reserved.</small>
+        </div>
+    </footer>
+</body>
+</html>
