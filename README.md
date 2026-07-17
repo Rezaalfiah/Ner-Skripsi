@@ -80,6 +80,9 @@ Data penelitian berfokus pada sepuluh tanaman herbal, yaitu temulawak, jahe, kun
 
 Proyek ini dikembangkan untuk keperluan akademik dan masih bersifat eksperimental. Hasil prediksi dapat digunakan sebagai pendukung analisis awal, tetapi tidak dimaksudkan untuk menggantikan anotasi manual, penilaian ahli, atau pertimbangan medis.
 
+
+## Demo
+http://103.93.129.77/
 ## Pengembang
 
 **Reza Alfiansyah** — Program Studi Informatika, Universitas Gunadarma
