@@ -4,56 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Tentang penelitian Named Entity Recognition pada abstrak artikel ilmiah tanaman herbal berbahasa Indonesia.">
-    <title>NER Tanaman Herbal</title>
+    <title>Named Entity Recognition Tanaman Obat Keluarga</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
 </head>
 
 <body class="about-page project-about-page">
     <a class="skip-link" href="#konten-utama">Lewati ke konten utama</a>
 
-    <!-- HERO ABOUT: ringkasan proyek dan konteks penelitian -->
-    <header class="about-header">
-        <div class="header-glow header-glow-left" aria-hidden="true"></div>
-        <div class="header-glow header-glow-right" aria-hidden="true"></div>
-
-        <div class="about-header-inner">
-            <div class="about-header-copy">
-                <span class="eyebrow">Tentang Proyek</span>
-                <h1>NER untuk membaca informasi penting dalam <span>artikel ilmiah herbal.</span></h1>
-                <p>
-                    Proyek ini merupakan penerapan Named Entity Recognition pada abstrak
-                    artikel ilmiah berbahasa Indonesia dan dikembangkan sebagai bagian dari
-                    penelitian skripsi di Program Studi Informatika, Universitas Gunadarma.
-                </p>
-            </div>
-
-            <div class="about-header-visual project-header-visual" aria-hidden="true">
-                <span class="about-visual-label">Abstrak ilmiah</span>
-                <span class="about-visual-line line-one"></span>
-                <div class="about-visual-core">
-                    <small>diproses oleh</small>
-                    <strong>NER</strong>
-                </div>
-                <span class="about-visual-line line-two"></span>
-                <div class="about-visual-output">
-                    <span>8 KATEGORI</span>
-                    <span>BIO TAGGING</span>
-                </div>
-            </div>
-        </div>
-    </header>
-
     <!-- NAVIGASI UTAMA -->
     <nav class="navbar" aria-label="Navigasi utama">
         <div class="navbar-content">
-            <a class="brand" href="{{ url_for('index') }}#beranda" aria-label="NER Herbal - kembali ke beranda">
-                <span class="brand-mark">N</span>
-                <span>NER Herbal</span>
-            </a>
+            <span class="brand">Named Entity Recognition Tanaman Obat Keluarga</span>
 
             <div class="nav-links">
-                <a href="{{ url_for('index') }}#beranda">Beranda</a>
+                <a href="{{ url_for('index') }}">Beranda</a>
                 <a class="nav-active" href="{{ url_for('about') }}" aria-current="page">Tentang</a>
                 <a class="nav-cta" href="{{ url_for('analyze') }}">Mulai Analisis</a>
             </div>
@@ -113,11 +78,8 @@
         <!-- DEFINISI NAMED ENTITY RECOGNITION -->
         <section class="ner-definition-about" aria-labelledby="judul-definisi-ner">
             <div class="ner-definition-heading">
-                <span class="definition-number" aria-hidden="true">NER</span>
-                <div>
-                    <span class="section-kicker">Apa itu NER?</span>
-                    <h2 id="judul-definisi-ner">Mengenali bagian penting di dalam teks</h2>
-                </div>
+                <span class="section-kicker">Apa itu NER?</span>
+                <h2 id="judul-definisi-ner">Mengenali bagian penting di dalam teks</h2>
             </div>
             <p>
                 <strong>Named Entity Recognition (NER)</strong> merupakan salah satu tugas dalam
@@ -142,11 +104,8 @@
         <!-- DEFINISI TANAMAN OBAT KELUARGA -->
         <section class="ner-definition-about toga-definition-about" aria-labelledby="judul-definisi-toga">
             <div class="ner-definition-heading">
-                <span class="definition-number toga-definition-mark" aria-hidden="true">TOGA</span>
-                <div>
-                    <span class="section-kicker">Apa itu tanaman obat keluarga?</span>
-                    <h2 id="judul-definisi-toga">Tumbuhan yang dirawat dekat dengan kehidupan keluarga</h2>
-                </div>
+                <span class="section-kicker">Apa itu tanaman obat keluarga?</span>
+                <h2 id="judul-definisi-toga">Tumbuhan yang dirawat dekat dengan kehidupan keluarga</h2>
             </div>
             <p>
                 <strong>Tanaman obat keluarga adalah jenis tumbuhan budidaya rumahan yang dapat
@@ -158,7 +117,6 @@
 
         <!-- TUJUAN PENGEMBANGAN SISTEM -->
         <section class="project-purpose" aria-labelledby="judul-tujuan">
-            <div class="purpose-number" aria-hidden="true">01</div>
             <div class="purpose-copy">
                 <span class="section-kicker">Tujuan pengembangan</span>
                 <h2 id="judul-tujuan">Membantu pembaca menemukan isi utama abstrak tanpa menandainya satu per satu.</h2>
@@ -324,18 +282,18 @@
 
         <!-- ALUR KERJA SISTEM -->
         <section class="workflow-about" aria-labelledby="judul-cara-kerja">
-            <div class="section-heading">
+            <div class="workflow-heading">
                 <div>
                     <span class="section-kicker">Cara kerja sistem</span>
-                    <h2 class="section-title" id="judul-cara-kerja">Dari abstrak menjadi informasi terstruktur</h2>
+                    <h2 class="workflow-title" id="judul-cara-kerja">Dari abstrak menjadi informasi terstruktur</h2>
                 </div>
-                <p class="section-subtitle">
+                <p class="workflow-subtitle">
                     Proses berlangsung dalam tiga tahap yang tetap memberi pengguna kesempatan
                     untuk memilih model dan meninjau hasilnya.
                 </p>
             </div>
 
-            <div class="home-process-grid">
+            <div class="workflow-grid">
                 <article>
                     <span>01</span>
                     <h3>Masukkan artikel</h3>
@@ -355,21 +313,23 @@
         </section>
 
         <!-- BATASAN HASIL PREDIKSI -->
-        <aside class="responsible-note project-limit-note" aria-labelledby="judul-batasan">
-            <div class="note-mark" aria-hidden="true">!</div>
-            <div>
-                <span>Batasan sistem</span>
-                <h2 id="judul-batasan">Hasil model tetap perlu dibaca kembali.</h2>
-                <p>
-                    Sistem hanya mengenali kategori yang telah ditentukan dalam dataset. Istilah
-                    yang tidak tersedia atau memiliki pola berbeda dari data pelatihan dapat
-                    menghasilkan prediksi yang kurang tepat. Kemampuan model juga dipengaruhi oleh
-                    jumlah data, konsistensi pelabelan, variasi istilah, dan struktur kalimat dalam
-                    abstrak. Karena itu, hasil identifikasi perlu ditinjau kembali, terutama untuk
-                    penelitian lanjutan.
-                </p>
-            </div>
-        </aside>
+        <section class="project-limit-section">
+            <aside class="responsible-note project-limit-note" aria-labelledby="judul-batasan">
+                <div class="note-mark" aria-hidden="true">!</div>
+                <div>
+                    <span>Batasan sistem</span>
+                    <h2 id="judul-batasan">Hasil model tetap perlu dibaca kembali.</h2>
+                    <p>
+                        Sistem hanya mengenali kategori yang telah ditentukan dalam dataset. Istilah
+                        yang tidak tersedia atau memiliki pola berbeda dari data pelatihan dapat
+                        menghasilkan prediksi yang kurang tepat. Kemampuan model juga dipengaruhi oleh
+                        jumlah data, konsistensi pelabelan, variasi istilah, dan struktur kalimat dalam
+                        abstrak. Karena itu, hasil identifikasi perlu ditinjau kembali, terutama untuk
+                        penelitian lanjutan.
+                    </p>
+                </div>
+            </aside>
+        </section>
 
         <!-- MANFAAT PENELITIAN DAN CTA ANALISIS -->
         <section class="research-benefit" aria-labelledby="judul-manfaat">
@@ -395,8 +355,7 @@
     <footer class="footer">
         <div class="footer-inner">
             <div>
-                <span class="brand-mark footer-mark">N</span>
-                <strong>NER Herbal</strong>
+                <strong>Named Entity Recognition Tanaman Obat Keluarga</strong>
             </div>
             <p>BiLSTM &amp; Naive Bayes untuk identifikasi entitas tanaman herbal.</p>
             <small>© 2026 Reza Alfiansyah. All rights reserved.</small>

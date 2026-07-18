@@ -17,5 +17,5 @@ __pycache__/
 .env.*
 *.log
 
-Dataset_NER_BIO_Tagging_Final.csv
-NER_BiLSTM_NB_FIXED.ipynb
+# Dataset_NER_BIO_Tagging_Final.csv
+# NER_BiLSTM_NB_FIXED.ipynb

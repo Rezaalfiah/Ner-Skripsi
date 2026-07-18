@@ -4,47 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Analisis entitas pada abstrak jurnal tanaman herbal menggunakan model BiLSTM atau Naive Bayes.">
-    <title>NER Tanaman Herbal</title>
+    <title>Named Entity Recognition Tanaman Obat Keluarga</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/analyze.css') }}">
 </head>
 
 <body class="analysis-page">
     <a class="skip-link" href="#konten-utama">Lewati ke konten utama</a>
 
-    <!-- HERO ANALISIS: petunjuk awal sebelum pengguna mengisi form -->
-    <header class="analysis-header">
-        <div class="header-glow header-glow-left" aria-hidden="true"></div>
-        <div class="header-glow header-glow-right" aria-hidden="true"></div>
-        <div class="analysis-header-inner">
-            <div>
-                <span class="eyebrow">Ruang Analisis</span>
-                <h1>Tempel abstraknya, lalu lihat informasi apa yang <span>ditemukan model.</span></h1>
-                <p>
-                    Anda tidak perlu mengubah susunan kalimat atau menandai istilah lebih dulu.
-                    Masukkan teks seperti aslinya, pilih model, kemudian periksa hasilnya dengan
-                    tetap merujuk pada konteks jurnal.
-                </p>
-            </div>
-
-            <aside class="analysis-header-note" aria-label="Informasi singkat analisis">
-                <span>Yang perlu disiapkan</span>
-                <strong>Satu abstrak jurnal</strong>
-                <p>Siapkan juga judul, nama penulis, dan tahun terbit karena seluruh kolom wajib diisi.</p>
-            </aside>
-        </div>
-    </header>
-
     <!-- NAVIGASI UTAMA -->
     <nav class="navbar" aria-label="Navigasi utama">
         <div class="navbar-content">
-            <a class="brand" href="{{ url_for('index') }}#beranda" aria-label="NER Herbal - kembali ke beranda">
-                <span class="brand-mark">N</span>
-                <span>NER Herbal</span>
-            </a>
+            <span class="brand">Named Entity Recognition Tanaman Obat Keluarga</span>
 
             <div class="nav-links">
-                <a href="{{ url_for('index') }}#beranda">Beranda</a>
+                <a href="{{ url_for('index') }}">Beranda</a>
                 <a href="{{ url_for('about') }}">Tentang</a>
                 <a class="nav-cta nav-cta-active" href="{{ url_for('analyze') }}" aria-current="page">Mulai Analisis</a>
             </div>
@@ -332,8 +306,7 @@
     <footer class="footer">
         <div class="footer-inner">
             <div>
-                <span class="brand-mark footer-mark">N</span>
-                <strong>NER Herbal</strong>
+                <strong>Named Entity Recognition Tanaman Obat Keluarga</strong>
             </div>
             <p>BiLSTM &amp; Naive Bayes untuk identifikasi entitas tanaman herbal.</p>
             <small>© 2026 Reza Alfiansyah. All rights reserved.</small>

@@ -54,9 +54,14 @@ Ner-Skripsi/
 │   ├── naive_bayes_ner_model.pkl
 │   └── ner_mappings.pkl
 ├── templates/
+│   ├── about.html
+│   ├── analyze.html
 │   └── index.html
 ├── static/
-│   ├── style.css
+│   ├── css/
+│   │   ├── home.css
+│   │   ├── about.css
+│   │   └── analyze.css
 │   └── images/
 ├── requirements.txt
 ├── Dockerfile
