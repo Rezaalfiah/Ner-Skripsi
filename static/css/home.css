@@ -486,7 +486,7 @@ img {
     height: 40px;
     display: grid;
     place-items: center;
-    border-radius: 50% 50% 50% 12px;
+    border-radius: 50%;
     background: var(--green-dark);
     color: #c8f2d5;
     font-size: 0.63rem;
