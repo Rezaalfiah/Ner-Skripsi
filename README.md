@@ -70,7 +70,7 @@ Ner-Skripsi/
 
 Komponen utama dalam proyek ini meliputi:
 
-- `app.py` untuk menjalankan aplikasi, memuat model, dan menangani proses prediksi.
+- `app.py` untuk menjalankan aplikasi, memuat model secara lazy, dan menangani proses prediksi.
 - `models/` untuk menyimpan bobot BiLSTM, model Naive Bayes, dan konfigurasi pemetaan NER.
 - `templates/` dan `static/` untuk membentuk antarmuka web serta menyediakan aset pendukung.
 - `requirements.txt` dan `Dockerfile` untuk mendefinisikan lingkungan aplikasi.
@@ -78,6 +78,31 @@ Komponen utama dalam proyek ini meliputi:
 ## Teknologi
 
 Aplikasi dikembangkan menggunakan Python, Flask, TensorFlow/Keras, Scikit-learn, NumPy, HTML, dan CSS.
+
+## Konfigurasi VPS
+
+Konfigurasi Docker menggunakan satu worker Gunicorn agar hanya ada satu salinan model di RAM. Dua thread tetap memungkinkan aplikasi menangani lebih dari satu koneksi tanpa menggandakan proses TensorFlow. Model BiLSTM dan Naive Bayes baru dimuat ketika dipilih untuk analisis.
+
+Nilai berikut dapat disesuaikan ketika container dijalankan:
+
+| Environment variable | Default | Keterangan |
+| -------------------- | ------: | ---------- |
+| `WEB_WORKERS` | `1` | Pertahankan satu worker pada VPS dengan RAM terbatas. |
+| `WEB_THREADS` | `2` | Jumlah thread permintaan pada worker. |
+| `WEB_TIMEOUT` | `180` | Batas waktu prediksi dalam detik. |
+| `STATIC_CACHE_SECONDS` | `86400` | Durasi cache CSS dan gambar di browser. |
+| `PORT` | `7860` | Port aplikasi di dalam container. |
+
+Contoh menjalankan container pada VPS:
+
+```bash
+docker run -d --restart unless-stopped \
+  --name ner-herbal \
+  --memory 2g \
+  --cpus 2 \
+  -p 7860:7860 \
+  ner-herbal
+```
 
 ## Ruang Lingkup Penelitian
 

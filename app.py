@@ -1,12 +1,23 @@
 import os
 import re
 import pickle
+import mimetypes
 import numpy as np
 from datetime import datetime
+from threading import RLock
 
-import tensorflow as tf
 from flask import Flask, render_template, request
 from markupsafe import escape
+
+
+# Kurangi log native saat TensorFlow dimuat. Pada Windows, oneDNN dinonaktifkan
+# untuk menghindari pesan fallback CPU; pengguna tetap dapat mengubahnya lewat env.
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+if os.name == "nt":
+    os.environ.setdefault("TF_ENABLE_ONEDNN_OPTS", "0")
+
+# Pastikan aset WebP memiliki Content-Type yang benar di semua sistem operasi.
+mimetypes.add_type("image/webp", ".webp")
 
 
 # =========================================================
@@ -19,6 +30,9 @@ app = Flask(
     template_folder="templates",
 )
 app.config["MAX_CONTENT_LENGTH"] = 64 * 1024
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = int(
+    os.environ.get("STATIC_CACHE_SECONDS", "86400")
+)
 
 MAX_ABSTRACT_CHARS = 10_000
 MAX_TOKENS = 1_000
@@ -108,6 +122,29 @@ require_file(BILSTM_WEIGHTS_PATH)
 require_file(NB_MODEL_PATH)
 
 
+# Model berukuran besar dimuat satu kali saat pertama kali digunakan.
+# Ini membuat halaman Flask dapat mulai tanpa menunggu proses impor TensorFlow.
+_MODEL_LOAD_LOCK = RLock()
+_INFERENCE_LOCK = RLock()
+_tensorflow = None
+_bilstm_model = None
+_nb_model = None
+
+
+def get_tensorflow():
+    global _tensorflow
+
+    if _tensorflow is None:
+        with _MODEL_LOAD_LOCK:
+            if _tensorflow is None:
+                import tensorflow as tensorflow_module
+
+                tensorflow_module.get_logger().setLevel("ERROR")
+                _tensorflow = tensorflow_module
+
+    return _tensorflow
+
+
 # =========================================================
 # Load Mapping
 # =========================================================
@@ -143,6 +180,8 @@ TAG_SIZE = len(tag2idx)
 # =========================================================
 
 def build_bilstm_model(vocab_size, tag_size, max_len):
+    tf = get_tensorflow()
+
     inputs = tf.keras.layers.Input(
         shape=(max_len,),
         dtype="int32",
@@ -179,22 +218,38 @@ def build_bilstm_model(vocab_size, tag_size, max_len):
     return model
 
 
-# Load BiLSTM weights only
-bilstm_model = build_bilstm_model(
-    vocab_size=VOCAB_SIZE,
-    tag_size=TAG_SIZE,
-    max_len=MAX_LEN
-)
+def get_bilstm_model():
+    global _bilstm_model
 
-bilstm_model.load_weights(BILSTM_WEIGHTS_PATH)
+    if _bilstm_model is None:
+        with _MODEL_LOAD_LOCK:
+            if _bilstm_model is None:
+                model = build_bilstm_model(
+                    vocab_size=VOCAB_SIZE,
+                    tag_size=TAG_SIZE,
+                    max_len=MAX_LEN,
+                )
+                model.load_weights(BILSTM_WEIGHTS_PATH)
+                _bilstm_model = model
+
+    return _bilstm_model
 
 
 # =========================================================
 # Load Naive Bayes Model
 # =========================================================
 
-with open(NB_MODEL_PATH, "rb") as f:
-    nb_model = pickle.load(f)
+
+def get_nb_model():
+    global _nb_model
+
+    if _nb_model is None:
+        with _MODEL_LOAD_LOCK:
+            if _nb_model is None:
+                with open(NB_MODEL_PATH, "rb") as model_file:
+                    _nb_model = pickle.load(model_file)
+
+    return _nb_model
 
 
 # =========================================================
@@ -323,7 +378,8 @@ def predict_bilstm_tokens(tokens):
     for i, token in enumerate(normalized_tokens):
         x[0, i] = word2idx.get(token, UNK_ID)
 
-    pred_proba = bilstm_model.predict(x, verbose=0)[0]
+    with _INFERENCE_LOCK:
+        pred_proba = get_bilstm_model().predict(x, verbose=0)[0]
     pred_ids = np.argmax(pred_proba, axis=-1)
     pred_conf = np.max(pred_proba, axis=-1)
 
@@ -442,7 +498,8 @@ def predict_nb(text, max_tokens=MAX_TOKENS):
     normalized_tokens = [normalize_token(t) for t in original_tokens]
     features = sent2features(normalized_tokens)
 
-    tags = nb_model.predict(features).tolist()
+    with _INFERENCE_LOCK:
+        tags = get_nb_model().predict(features).tolist()
     tags = fix_bio_sequence(tags)
 
     return list(zip(original_tokens, tags))

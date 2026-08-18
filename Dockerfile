@@ -4,6 +4,13 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     TF_CPP_MIN_LOG_LEVEL=2 \
+    OMP_NUM_THREADS=2 \
+    TF_NUM_INTRAOP_THREADS=2 \
+    TF_NUM_INTEROP_THREADS=1 \
+    WEB_WORKERS=1 \
+    WEB_THREADS=2 \
+    WEB_TIMEOUT=180 \
+    STATIC_CACHE_SECONDS=86400 \
     PORT=7860
 
 WORKDIR /app
@@ -26,5 +33,10 @@ COPY static ./static
 
 EXPOSE 7860
 
-# Gunicorn menjalankan aplikasi Flask melalui objek `app` di app.py.
-CMD ["gunicorn", "--bind", "0.0.0.0:7860", "--workers", "1", "--threads", "2", "--timeout", "180", "app:app"]
+# Healthcheck hanya membuka homepage sehingga tidak memuat model machine learning.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD python -c "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('PORT', '7860') + '/', timeout=3)"
+
+# Satu worker mencegah salinan model memenuhi RAM; threads tetap memberi konkurensi.
+# Seluruh nilai dapat dioverride melalui environment variable sesuai kapasitas VPS.
+CMD ["sh", "-c", "exec gunicorn --bind 0.0.0.0:${PORT} --workers ${WEB_WORKERS} --threads ${WEB_THREADS} --timeout ${WEB_TIMEOUT} --access-logfile - app:app"]

@@ -31,7 +31,7 @@ body {
     margin: 0;
     background: var(--cream);
     color: var(--text);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Inter", sans-serif;
     line-height: 1.6;
 }
 
@@ -226,33 +226,11 @@ button, input, textarea {
 
 .form-intro {
     padding-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
     border-bottom: 1px solid var(--line);
 }
 
-.step-badge {
-    width: 40px;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--green-dark);
-    color: #c8f2d5;
-    font-size: 0.65rem;
-    font-weight: 800;
-}
-
-.form-intro span {
-    color: var(--green);
-    font-size: 0.63rem;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
 .form-intro h3 {
-    margin: 2px 0 0;
+    margin: 0;
     color: var(--green-dark);
     font-size: 1rem;
 }

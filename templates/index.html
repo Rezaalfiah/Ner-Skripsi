@@ -6,6 +6,9 @@
     <meta name="description" content="Sistem identifikasi entitas pada abstrak jurnal tanaman herbal menggunakan BiLSTM dan Naive Bayes.">
     <title>Named Entity Recognition Tanaman Obat Keluarga</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 
@@ -149,7 +152,7 @@
             <div class="herbal-grid">
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">01</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Jahe.png') }}" alt="Jahe" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Jahe.webp') }}" alt="Jahe" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Jahe</h3>
                     <p>Rimpang yang banyak dibahas dalam penelitian terkait gingerol, rasa hangat, dan keluhan pencernaan.</p>
                     <span class="latin-name">Zingiber officinale</span>
@@ -157,7 +160,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">02</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Kunyit.png') }}" alt="Kunyit" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Kunyit.webp') }}" alt="Kunyit" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Kunyit</h3>
                     <p>Kerap diteliti karena kandungan kurkumin dan hubungannya dengan aktivitas antiinflamasi.</p>
                     <span class="latin-name">Curcuma longa</span>
@@ -165,7 +168,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">03</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Daun-Sirih.png') }}" alt="Daun sirih" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Daun-Sirih.webp') }}" alt="Daun sirih" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Daun Sirih</h3>
                     <p>Daunnya sering muncul dalam kajian aktivitas antibakteri, kesehatan mulut, dan perawatan luka.</p>
                     <span class="latin-name">Piper betle</span>
@@ -173,7 +176,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">04</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Temulawak.png') }}" alt="Temulawak" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Temulawak.webp') }}" alt="Temulawak" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Temulawak</h3>
                     <p>Tanaman rimpang yang banyak dikaji melalui kandungan kurkuminoid dan efek biologisnya.</p>
                     <span class="latin-name">Curcuma xanthorrhiza</span>
@@ -181,7 +184,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">05</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Kumis-Kucing.jpg') }}" alt="Kumis kucing" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Kumis-Kucing.webp') }}" alt="Kumis kucing" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Kumis Kucing</h3>
                     <p>Sering dibahas dalam penelitian mengenai aktivitas diuretik dan kesehatan saluran kemih.</p>
                     <span class="latin-name">Orthosiphon aristatus</span>
@@ -189,7 +192,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">06</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Sambiloto.png') }}" alt="Sambiloto" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Sambiloto.webp') }}" alt="Sambiloto" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Sambiloto</h3>
                     <p>Rasa pahitnya khas; jurnal banyak membahas andrographolide dan respons biologisnya.</p>
                     <span class="latin-name">Andrographis paniculata</span>
@@ -197,7 +200,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">07</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Mengkudu.png') }}" alt="Mengkudu" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Mengkudu.webp') }}" alt="Mengkudu" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Mengkudu</h3>
                     <p>Buah dengan aroma khas yang diteliti karena beragam senyawa bioaktif dan aktivitas antioksidan.</p>
                     <span class="latin-name">Morinda citrifolia</span>
@@ -205,7 +208,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">08</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Lengkuas.png') }}" alt="Lengkuas" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Lengkuas.webp') }}" alt="Lengkuas" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Lengkuas</h3>
                     <p>Selain dikenal sebagai bumbu, lengkuas juga dikaji melalui senyawa fenolik dan aktivitas antimikroba.</p>
                     <span class="latin-name">Alpinia galanga</span>
@@ -213,7 +216,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">09</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Pegagan.png') }}" alt="Pegagan" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Pegagan.webp') }}" alt="Pegagan" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Pegagan</h3>
                     <p>Tanaman menjalar yang sering dikaitkan dengan triterpenoid, kulit, luka, dan fungsi kognitif.</p>
                     <span class="latin-name">Centella asiatica</span>
@@ -221,7 +224,7 @@
 
                 <article class="herbal-card">
                     <div class="card-topline"><span class="card-number">10</span><span class="tag">HERB</span></div>
-                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Kelor.png') }}" alt="Kelor" class="herbal-image"></div>
+                    <div class="herbal-image-wrapper"><img src="{{ url_for('static', filename='images/Kelor.webp') }}" alt="Kelor" class="herbal-image" width="360" height="360" loading="lazy" decoding="async"></div>
                     <h3>Kelor</h3>
                     <p>Daunnya banyak diteliti sebagai sumber nutrisi serta bahan dengan kandungan antioksidan.</p>
                     <span class="latin-name">Moringa oleifera</span>
