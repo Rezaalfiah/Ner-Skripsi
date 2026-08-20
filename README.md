@@ -85,13 +85,13 @@ Konfigurasi Docker menggunakan satu worker Gunicorn agar hanya ada satu salinan 
 
 Nilai berikut dapat disesuaikan ketika container dijalankan:
 
-| Environment variable | Default | Keterangan |
-| -------------------- | ------: | ---------- |
-| `WEB_WORKERS` | `1` | Pertahankan satu worker pada VPS dengan RAM terbatas. |
-| `WEB_THREADS` | `2` | Jumlah thread permintaan pada worker. |
-| `WEB_TIMEOUT` | `180` | Batas waktu prediksi dalam detik. |
-| `STATIC_CACHE_SECONDS` | `86400` | Durasi cache CSS dan gambar di browser. |
-| `PORT` | `7860` | Port aplikasi di dalam container. |
+| Environment variable   | Default | Keterangan                                            |
+| ---------------------- | ------: | ----------------------------------------------------- |
+| `WEB_WORKERS`          |     `1` | Pertahankan satu worker pada VPS dengan RAM terbatas. |
+| `WEB_THREADS`          |     `2` | Jumlah thread permintaan pada worker.                 |
+| `WEB_TIMEOUT`          |   `180` | Batas waktu prediksi dalam detik.                     |
+| `STATIC_CACHE_SECONDS` | `86400` | Durasi cache CSS dan gambar di browser.               |
+| `PORT`                 |  `7860` | Port aplikasi di dalam container.                     |
 
 Contoh menjalankan container pada VPS:
 
@@ -110,9 +110,10 @@ Data penelitian berfokus pada sepuluh tanaman herbal, yaitu temulawak, jahe, kun
 
 Proyek ini dikembangkan untuk keperluan akademik dan masih bersifat eksperimental. Hasil prediksi dapat digunakan sebagai pendukung analisis awal, tetapi tidak dimaksudkan untuk menggantikan anotasi manual, penilaian ahli, atau pertimbangan medis.
 
-
 ## Demo
-http://103.93.129.77/
+
+https://named-entity-recognition-toga.web.id/
+
 ## Pengembang
 
 **Reza Alfiansyah** — Program Studi Informatika, Universitas Gunadarma
